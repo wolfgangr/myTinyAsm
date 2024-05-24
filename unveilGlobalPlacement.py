@@ -49,29 +49,24 @@ def sync_GPParams(obj_svtr, obj_svnd, pgname = parameter_group_name):
 
     print ('old_PL', old_PL)
     print ('new_PL', new_PL)
-    return
+    # return ==~~~~~~~~~~~~~~~~---------------
 
-
-    # old_param_list = map-filter ( $1, /(pgname)(.*)/
-    old_paramList = []
-    for prm in obj.PropertiesList:
-        match = re.search(f"^{pgname}_(.*)", prm)
-        if match:
-            old_paramList.append( match.groups()[0] )
-
-    print ('old_paramList:', old_paramList)
-    print ('new_paramList:', new_paramList)
-    for prm in new_paramList:
-        pg_prm = pgname + '_' + prm  #.rstrip('.')
-        if not (prm in old_paramList):
+    # add missing params
+    for prm in new_PL:
+        pg_prm = pgname + '_' + prm.rstrip('.')
+        if not (prm in old_PL):
             print('create param: ' + pg_prm)
-            obj.addProperty("App::PropertyPlacementList", pg_prm, pgname, tooltip)
+            obj_svtr.addProperty("App::PropertyPlacement", pg_prm, pgname, tooltip)
+            obj_svtr.setEditorMode(pg_prm, ['ReadOnly'])
 
-    for prm in old_paramList:
-        pg_prm = pgname + '_' + prm  # .rstrip('.')
-        if not (prm in new_paramList):
+    # remove stale params
+    for prm in old_PL:
+        pg_prm = pgname + '_' + prm.rstrip('.')
+        if not (prm in new_PL):
             print('delete param: ' + pg_prm)
-            obj.removeProperty(pg_prm)
+            obj_svtr.removeProperty(pg_prm)
+
+    obj_svtr.inspectedSubobjectList = new_PL
 
 
 
@@ -115,4 +110,8 @@ class GPinspector():
         print('Recomputing {0:s} ({1:s})'.format(obj.Name, self.Type))
         #
         surveilland = obj.inspectedObject
-        sync_GPParams(obj, surveilland)
+        if surveilland:
+            sync_GPParams(obj, surveilland)
+        else:
+            print('no object for inspection selected')
+
