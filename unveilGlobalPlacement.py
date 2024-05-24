@@ -49,11 +49,12 @@ def sync_GPParams(obj_svtr, obj_svnd, pgname = parameter_group_name):
 
     print ('old_PL', old_PL)
     print ('new_PL', new_PL)
-    # return ==~~~~~~~~~~~~~~~~---------------
 
+    prm2prop = {} # keep a dictionary of subobj name -> proeprty name
     # add missing params
     for prm in new_PL:
         pg_prm = pgname + '_' + prm.rstrip('.')
+        prm2prop[prm] = pg_prm
         if not (prm in old_PL):
             print('create param: ' + pg_prm)
             obj_svtr.addProperty("App::PropertyPlacement", pg_prm, pgname, tooltip)
@@ -67,7 +68,7 @@ def sync_GPParams(obj_svtr, obj_svnd, pgname = parameter_group_name):
             obj_svtr.removeProperty(pg_prm)
 
     obj_svtr.inspectedSubobjectList = new_PL
-
+    return prm2prop
 
 
 def create_uGP(obj_name = 'GPinspector'):
@@ -111,7 +112,9 @@ class GPinspector():
         #
         surveilland = obj.inspectedObject
         if surveilland:
-            sync_GPParams(obj, surveilland)
+            paramDict = sync_GPParams(obj, surveilland)
+            print ('paramDict:', paramDict)
+
         else:
             print('no object for inspection selected')
 
