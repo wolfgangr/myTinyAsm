@@ -105,10 +105,15 @@ class GPinspector():
         obj.setEditorMode('inspectedSubobjectList', ['ReadOnly'])
 
     def onChanged(self, obj, prop):
-        self.execute(obj)
+        # self.execute(obj)
+        try:
+            App.ActiveDocument.recompute()
+        except:
+            print('App.ActiveDocument.recompute() failed')
 
-    def onDocumentRestored(self, obj):
-        self.execute(obj)
+    # def onDocumentRestored(self, obj):
+        # self.execute(obj)
+        # pass
 
     def execute(self, obj):
         """
