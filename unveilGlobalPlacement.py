@@ -69,6 +69,15 @@ def create_uGP(obj_name = 'GPinspector'):
 
     obj = App.ActiveDocument.addObject('App::FeaturePython', obj_name)
     GPinspector(obj)
+
+    try:
+        target = FreeCADGui.Selection.getSelection()[0]
+        obj.inspectedObject = target
+        print(f"attached to surveillance of object: <{target.Name}>")
+    except:
+        print('no valid object selected, leave empty')
+        pass
+
     App.ActiveDocument.recompute()
     return obj
 
