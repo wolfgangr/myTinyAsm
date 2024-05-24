@@ -58,7 +58,7 @@ def sync_GPParams(obj_svtr, obj_svnd, pgname = parameter_group_name):
         if not (prm in old_PL):
             print('create param: ' + pg_prm)
             obj_svtr.addProperty("App::PropertyPlacement", pg_prm, pgname, tooltip)
-            obj_svtr.setEditorMode(pg_prm, ['ReadOnly'])
+            # obj_svtr.setEditorMode(pg_prm, ['ReadOnly'])
 
     # remove stale params
     for prm in old_PL:
@@ -111,10 +111,21 @@ class GPinspector():
         print('Recomputing {0:s} ({1:s})'.format(obj.Name, self.Type))
         #
         surveilland = obj.inspectedObject
-        if surveilland:
+        if not surveilland:
+            print('no object for inspection selected')
+        else:
             paramDict = sync_GPParams(obj, surveilland)
             print ('paramDict:', paramDict)
+            prefix='' # valid for singleton links
+            for so in paramDict.keys():
+                pg_prm = paramDict[so]
+                path = prefix + so  #  so.rstrip('.')
+                plc = surveilland.getSubObject(path, retType = 3)
+                prop = getattr(obj, pg_prm)
+                print("checker: so, pg_prm , prop, path, plc:",so, pg_prm , prop, path, plc)
+                # getattr(obj, pg_prm)
+                # prop = getattr(obj, pg_prm)
+                if plc:
+                    setattr(obj, pg_prm, plc.Matrix)
 
-        else:
-            print('no object for inspection selected')
 
