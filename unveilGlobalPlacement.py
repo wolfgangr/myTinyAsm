@@ -113,7 +113,9 @@ class GPinspector():
         surveilland = obj.inspectedObject
         if not surveilland:
             print('no object for inspection selected')
+            obj.Label=obj.Name
         else:
+            obj.Label='GPinsp_' + surveilland.Label
             paramDict = sync_GPParams(obj, surveilland)
             print ('paramDict:', paramDict)
             prefix='' # valid for singleton links
@@ -122,7 +124,7 @@ class GPinspector():
                 path = prefix + so  #  so.rstrip('.')
                 plc = surveilland.getSubObject(path, retType = 3)
                 prop = getattr(obj, pg_prm)
-                print("checker: so, pg_prm , prop, path, plc:",so, pg_prm , prop, path, plc)
+                # print("checker: so, pg_prm , prop, path, plc:",so, pg_prm , prop, path, plc)
                 # getattr(obj, pg_prm)
                 # prop = getattr(obj, pg_prm)
                 if plc:
