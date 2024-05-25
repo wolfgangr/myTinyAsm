@@ -57,6 +57,12 @@ class GPpart(object):
 
         print ("current_insp_list:", current_insp_list)
 
+        for obj_in in obj.InListRecursive:
+            if ((obj_in.TypeId == 'App::Link' and obj_in.ElementCount == 0 ) or
+                    (obj_in.TypeId == 'App::LinkElement')):
+                print ('doing inspector with ', obj_in.FullName)
+
+
 
 class ViewProviderGPpart(object):
     def __init__(self, vobj=None):
