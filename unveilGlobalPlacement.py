@@ -105,8 +105,10 @@ class GPinspector():
         obj.setEditorMode('inspectedSubobjectList', ['ReadOnly'])
 
     def onChanged(self, obj, prop):
-        # self.execute(obj)
+        # self.execute(obj) # triggers endless recalc loop
         try:
+            # prints "<App> Document.cpp(2705): Recursive calling of recompute"
+            # but result looks fine
             App.ActiveDocument.recompute()
         except:
             print('App.ActiveDocument.recompute() failed')
@@ -136,9 +138,8 @@ class GPinspector():
                 plc = surveilland.getSubObject(path, retType = 3)
                 prop = getattr(obj, pg_prm)
                 # print("checker: so, pg_prm , prop, path, plc:",so, pg_prm , prop, path, plc)
-                # getattr(obj, pg_prm)
-                # prop = getattr(obj, pg_prm)
                 if plc:
+                    # direct assignment of plc does not work
                     setattr(obj, pg_prm, plc.Matrix)
 
 
