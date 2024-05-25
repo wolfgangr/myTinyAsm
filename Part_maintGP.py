@@ -47,6 +47,17 @@ class GPpart(object):
     def onDocumentRestored(self, obj):
         self.Object = obj
 
+    def execute(self, obj):
+        print('in execute of', obj.FullName)
+        current_insp_list =[]
+        for obj_in in obj.InListRecursive:
+            if re.search( '^GPinspector', obj_in.Name):
+                current_insp_list.append(obj_in)
+                print ('appended', obj_in.Name)
+
+        print ("current_insp_list:", current_insp_list)
+
+
 class ViewProviderGPpart(object):
     def __init__(self, vobj=None):
         if vobj:
