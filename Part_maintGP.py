@@ -47,9 +47,32 @@ class GPpart(object):
     def onDocumentRestored(self, obj):
         self.Object = obj
 
+class ViewProviderGPpart(object):
+    def __init__(self, vobj=None):
+        if vobj:
+            vobj.Proxy = self
+            self.attach(vobj)
+        else:
+            self.ViewObject = None
+
+    def attach(self, vobj):
+        vobj.addExtension("Gui::ViewProviderOriginGroupExtensionPython")
+        self.ViewObject = vobj
+
+    def getIcon(self):
+        return iconPath
+
+    def dumps(self):
+        return None
+
+    def loads(self, _state):
+        return None
+
 
 def create_GPpart():
-    App.ActiveDocument.addObject("Part::FeaturePython","GPpart", "GPpart")
+    App.ActiveDocument.addObject("Part::FeaturePython",
+            "GPpart", GPpart(),
+            ViewProviderGPpart(), True)
 
                              #"Group",
                              #MyGroup(),
