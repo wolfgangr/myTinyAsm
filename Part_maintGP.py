@@ -83,7 +83,7 @@ class GPpart(object):
                     # ... and maintain current list
                     current_insp_list.append(newGPi)
 
-        # # stale
+        # remove stale isnpectors belonging to deleted Links
         # for  old inspector list
         old_inspNames_list = getattr(obj, 'maintainedInspectors')
         new_inspNames_list = [i.Name for i in current_insp_list]
@@ -101,8 +101,8 @@ class GPpart(object):
                 print ('oldIobj:', oldIobj)
                 # 	if not found attached part
                 if getattr (oldIobj, 'inspectedObject', False) is None:
-                    # default 'False' handles the case of missing this field althogether
-                    # or oldIobj is None
+                    # default 'False' handles the case of 'missing this field althogether'
+                    # as well as 'oldIobj is None'
                     # we do'nt delete this since we do not know what it is
                     print ('removing stale inspector',  old_insp )
                     App.ActiveDocument.removeObject(old_insp)
