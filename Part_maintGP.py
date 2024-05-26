@@ -75,7 +75,7 @@ class GPpart(object):
                     print ('no inspector')
                     # ... attach inspector ...
                     # ugp.create_uGP(obj_name = 'GPinspector', arg_tgt = None):
-                    # newGPi = ugp.create_uGP(obj_name = 'PtLnkGPi', arg_tgt = obj_dlnk)
+                    newGPi = ugp.create_uGP(obj_name = 'PtLnkGPi', arg_tgt = obj_dlnk)
 
 
                     ## ... and  ##TBD maintain current list
