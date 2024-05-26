@@ -57,18 +57,18 @@ class GPpart(object):
 
         print ("current_insp_list:", current_insp_list)
 
-        for obj_in in obj.InListRecursive:
-            if ((obj_in.TypeId == 'App::Link' and obj_in.ElementCount == 0 ) or
-                    (obj_in.TypeId == 'App::LinkElement')):
-                print ('doing inspector with ', obj_in.FullName)
+        # iterate down the DAG for dependent Links
+        for obj_dlnk in obj.InListRecursive:
+            if ((obj_dlnk.TypeId == 'App::Link' and obj_dlnk.ElementCount == 0 ) or
+                    (obj_dlnk.TypeId == 'App::LinkElement')):
+                print ('doing inspector with ', obj_dlnk.FullName)
 
-                # if not has inspector
-                if 'GPinspector' not in [ initm.Proxy.Type
-                        for initm in obj.InListRecursive
-                        if hasattr(initm, 'Proxy') ] :
+                # if dependent Link has no inspector
+                if 'GPinspector' not in [ itm.Proxy.Type
+                        for itm in obj_dlnk.InListRecursive
+                        if hasattr(itm, 'Proxy') ] :
                     print ('no inspector')
-                # obj.InListRecursive
-                # attach inspector (maintain current list)
+                    # attach inspector (maintain current list)
 
 
 
