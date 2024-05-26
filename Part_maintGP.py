@@ -16,10 +16,15 @@ tooltip = "maintain gobal Placement inspectors for all link childs"
 
 # ======================================
 
+#/home/wrosner/.local/share/FreeCAD/Macro/dev/myTinyAsm/unveilGlobalPlacement.py
+# def create_uGP(obj_name = 'GPinspector'):
+
+
 import os
 import re
 import datetime
 
+import dev.myTinyAsm.unveilGlobalPlacement as ugp
 
 def dummy(): pass
 script_path = (dummy.__code__.co_filename)
@@ -69,7 +74,8 @@ class GPpart(object):
                         if hasattr(itm, 'Proxy') ] :
                     print ('no inspector')
                     # attach inspector (maintain current list)
-
+#/home/wrosner/.local/share/FreeCAD/Macro/dev/myTinyAsm/unveilGlobalPlacement.py
+# def create_uGP(obj_name = 'GPinspector'):
 
 
 class ViewProviderGPpart(object):
