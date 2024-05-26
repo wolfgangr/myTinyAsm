@@ -62,6 +62,14 @@ class GPpart(object):
                     (obj_in.TypeId == 'App::LinkElement')):
                 print ('doing inspector with ', obj_in.FullName)
 
+                # if not has inspector
+                if 'GPinspector' not in [ initm.Proxy.Type
+                        for initm in obj.InListRecursive
+                        if hasattr(initm, 'Proxy') ] :
+                    print ('no inspector')
+                # obj.InListRecursive
+                # attach inspector (maintain current list)
+
 
 
 class ViewProviderGPpart(object):
