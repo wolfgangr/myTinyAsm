@@ -28,7 +28,13 @@ objCone.Height = '7.777 mm'
 objCone.Angle = '237 deg'
 
 # App.ActiveDocument.recompute()
+objLCS = doc.addObject('PartDesign::CoordinateSystem', 'LCS')
+objLCS.MapMode='NormalToEdge'
+objLCS.Support = [(objCone, ('Vertex1', 'Edge1'))]
+# objLCS.Support = [(objCone, ('Vertex2', 'Edge5'))]
 
-
+objPart.addObject(objCone)
+objPart.addObject(objLCS)
 
 doc.recompute(None,True,True)
+
