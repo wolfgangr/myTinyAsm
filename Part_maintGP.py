@@ -114,7 +114,7 @@ class GPpart(object):
                     App.ActiveDocument.removeObject(old_insp)
 
         # current_inspector_list -> write to old_inspector_list
-        obj.maintainedInspectors = current_inspector_list
+        obj.maintainedInspectors = current_insp_list
 
 class ViewProviderGPpart(object):
     def __init__(self, vobj=None):
