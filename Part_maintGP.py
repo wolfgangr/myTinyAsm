@@ -110,7 +110,7 @@ class GPpart(object):
         ## old_inspNames_list = [i.Name for i in old_insp_list ]
         # new_inspNames_list = [i.Name for i in current_insp_list]
         # for old_insp in old_inspNames_list:
-        for check_insp in getattr(obj, 'maintainedInspectors')
+        for check_insp in getattr(obj, 'maintainedInspectors'):
             # 	if not in in current_inspector_list
             # if old_insp not in new_inspNames_list:
             #     print ('stale inspector:', old_insp, '- check for deletion')
