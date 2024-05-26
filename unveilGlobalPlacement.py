@@ -71,21 +71,28 @@ def sync_GPParams(obj_svtr, obj_svnd, pgname = parameter_group_name):
     return prm2prop
 
 
-def create_uGP(obj_name = 'GPinspector'):
+def create_uGP(obj_name = 'GPinspector', arg_tgt = None):
     """
     Object creation method
+    target priority:
+    - "arg_tgt" call argument
+    - first obj in GUI selection
+    - default: None - to be assigned later
     """
 
     obj = App.ActiveDocument.addObject('App::FeaturePython', obj_name)
     GPinspector(obj)
 
-    try:
-        target = FreeCADGui.Selection.getSelection()[0]
-        obj.inspectedObject = target
-        print(f"attached to surveillance of object: <{target.Name}>")
-    except:
-        print('no valid object selected, leave empty')
-        pass
+    if arg_tgt:
+        obj.inspectedObject = arg_tgt
+    else:
+        try:
+            target = FreeCADGui.Selection.getSelection()[0]
+            obj.inspectedObject = target
+            print(f"attached to surveillance of object: <{target.Name}>")
+        except:
+            print('no valid object selected, leave empty')
+            pass
 
     App.ActiveDocument.recompute()
     return obj

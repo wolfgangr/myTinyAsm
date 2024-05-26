@@ -68,14 +68,18 @@ class GPpart(object):
                     (obj_dlnk.TypeId == 'App::LinkElement')):
                 print ('doing inspector with ', obj_dlnk.FullName)
 
-                # if dependent Link has no inspector
+                # if dependent Link has no inspector ....
                 if 'GPinspector' not in [ itm.Proxy.Type
                         for itm in obj_dlnk.InListRecursive
                         if hasattr(itm, 'Proxy') ] :
                     print ('no inspector')
-                    # attach inspector (maintain current list)
-#/home/wrosner/.local/share/FreeCAD/Macro/dev/myTinyAsm/unveilGlobalPlacement.py
-# def create_uGP(obj_name = 'GPinspector'):
+                    # ... attach inspector ...
+                    # ugp.create_uGP(obj_name = 'GPinspector', arg_tgt = None):
+                    # newGPi = ugp.create_uGP(obj_name = 'PtLnkGPi', arg_tgt = obj_dlnk)
+
+
+                    ## ... and  ##TBD maintain current list
+
 
 
 class ViewProviderGPpart(object):
