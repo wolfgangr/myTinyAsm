@@ -36,16 +36,17 @@ objLCS.Support = [(objCone, ('Vertex1', 'Edge1'))]
 objPart.addObject(objCone)
 objPart.addObject(objLCS)
 
-
-### Begin command Std_LinkMake
-# App.getDocument('Unnamed').addObject('App::Link','Link').setLink(App.getDocument('Unnamed').Part)
-# App.getDocument('Unnamed').getObject('Link').Label='Part'
-### End command Std_LinkMake
-
 lnk0 = doc.addObject('App::Link','Link0')
 lnk0.setLink(objPart)
 lnk0.Label='Link0_single'
 
+lnk1 = doc.addObject('App::Link','Link1')
+lnk1.setLink(objPart)
+lnk1.Label='Link1_ar2vis'
+
+lnk2 = doc.addObject('App::Link','Link2')
+lnk2.setLink(objPart)
+lnk2.Label='Link2_ar3hid'
 
 doc.recompute(None,True,True)
 Gui.activeDocument().activeView().viewIsometric()
