@@ -58,6 +58,8 @@ class GPpart(object):
 
     def execute(self, obj):
         print('in execute of', obj.FullName)
+
+        # search for inspectors down in GPParts DAG
         current_insp_list =[]
         for obj_in in obj.InListRecursive:
             if re.search( '^GPinspector', obj_in.Name):
@@ -66,7 +68,7 @@ class GPpart(object):
 
         print ("current_insp_list:", current_insp_list)
 
-        # iterate down the DAG for dependent Links
+        # search for dependent Links down in GPParts DAG
         for obj_dlnk in obj.InListRecursive:
             if ((obj_dlnk.TypeId == 'App::Link' and obj_dlnk.ElementCount == 0 ) or
                     (obj_dlnk.TypeId == 'App::LinkElement')):
