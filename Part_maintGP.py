@@ -72,7 +72,7 @@ class GPpart(object):
 
     def execute(self, obj):
         print('in execute of', obj.FullName)
-        doc = App.ActiveDocument
+        doc = FreeCAD.ActiveDocument
         # search for inspectors down in GPParts DAG
         ## TBD don't rely on InListRecursive
         # current_insp_list =[]
@@ -127,7 +127,7 @@ class GPpart(object):
             #
             #     print ('oldIobj:', oldIobj)
             # 	if not found attached part
-            if getattr (checkInsp, 'inspectedObject', False) is None:
+            if getattr (check_insp, 'inspectedObject', False) is None:
                 # default 'False' handles the case of 'missing this field althogether'
                 # as well as 'checkInsp is None'
                 # we do'nt delete this since we do not know what it is
@@ -138,7 +138,7 @@ class GPpart(object):
         # remove all objects that don' belong to the document any more
         # .... obj in doc.Objects == False ...
         print('current_insp_list*FullName after removing', [i.Name for i in current_insp_list])
-        current_insp_list = [i for i in current_insp_list if i in doc.objects]
+        current_insp_list = [i for i in current_insp_list if i in doc.Objects]
         print('current_insp_list*FullName after purging', [i.Name for i in current_insp_list])
 
         # current_inspector_list -> write to old_inspector_list
