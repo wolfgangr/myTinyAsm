@@ -56,6 +56,15 @@ lnk2.Label='Link2_ar3hid'
 lnk2.ElementCount = 3
 lnk2.ShowElement = False
 lnk2.Placement = App.Placement(App.Vector(2,0,-2),App.Rotation(App.Vector(-1,1,0),18))
+# hidden Element LinkArrays have an empty LinkedChildren list
+# lnk2.PlacementList[1] = App.Placement(App.Vector(-2,-5,-8),App.Rotation(App.Vector(1,1,1),-117))
+# looks like we can't assign single item in Property
+pll = lnk2.PlacementList
+print ('pll before:', pll)
+pll[1] = App.Placement(App.Vector(-2,-5,-8),App.Rotation(App.Vector(1,1,1),-117))
+print ('pll  after:', pll)
+lnk2.PlacementList = pll
+
 
 doc.recompute(None,True,True)
 Gui.activeDocument().activeView().viewIsometric()
