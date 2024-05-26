@@ -105,7 +105,7 @@ class GPpart(object):
                     # ... and maintain current list
                     current_insp_list.append(newGPi)
 
-        print('current_insp_list*FullName after adding', [i.Name for i in current_insp_list])
+        # print('current_insp_list*FullName after adding', [i.Name for i in current_insp_list])
 
         # remove stale isnpectors belonging to deleted Links
         # for  old inspector list
