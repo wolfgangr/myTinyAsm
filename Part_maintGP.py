@@ -131,13 +131,13 @@ class GPpart(object):
                 # default 'False' handles the case of 'missing this field althogether'
                 # as well as 'checkInsp is None'
                 # we do'nt delete this since we do not know what it is
-                print ('removing stale inspector',  checkInsp.Name )
-                doc.removeObject(checkInsp.Name)
+                print ('removing stale inspector',  check_insp.Name )
+                doc.removeObject(check_insp.Name)
                 ## TBD: remove from current_insp_list
 
         # remove all objects that don' belong to the document any more
         # .... obj in doc.Objects == False ...
-        print('current_insp_list*FullName after removing', [i.Name for i in current_insp_list])
+        # print('current_insp_list*FullName after removing', [i.Name for i in current_insp_list])
         current_insp_list = [i for i in current_insp_list if i in doc.Objects]
         print('current_insp_list*FullName after purging', [i.Name for i in current_insp_list])
 
