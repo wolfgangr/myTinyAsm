@@ -4,15 +4,21 @@
 # (c) Wolfgang Rosner 2024 - wolfagngr@github.com
 # License: LGPL 2+
 
-import FreeCAD
-import Part
-import ManipulatorCMD
+import FreeCAD as App
+# import Part
+# import ManipulatorCMD
 # import Commands
+
+import dev.myTinyAsm.Part_maintGP as gpp
 
 doc = App.newDocument()
 
-objPart = doc.addObject('App::Part','Part')
-objPart.Label = 'Part'
+# objPart = doc.addObject('App::Part','Part')
+# objPart.Label = 'Part'
+objPart = gpp.create_GPpart()
+print (objPart)
+App.ActiveDocument.recompute()
+objPart.Label = 'GPPart'
 # App.ActiveDocument.recompute()
 
 objBox = doc.addObject("Part::Box","Box")
@@ -69,3 +75,4 @@ lnk2.PlacementList = pll
 doc.recompute(None,True,True)
 Gui.activeDocument().activeView().viewIsometric()
 Gui.SendMsgToActiveView("ViewFit")
+doc.recompute()

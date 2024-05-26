@@ -19,12 +19,15 @@ tooltip = "maintain gobal Placement inspectors for all link childs"
 #/home/wrosner/.local/share/FreeCAD/Macro/dev/myTinyAsm/unveilGlobalPlacement.py
 # def create_uGP(obj_name = 'GPinspector'):
 
-
+# import FreeCAD as App
+import FreeCAD
+# App = FreeCAD
 import os
 import re
 import datetime
-
+# print(App)
 import dev.myTinyAsm.unveilGlobalPlacement as ugp
+# print(App)
 
 def dummy(): pass
 script_path = (dummy.__code__.co_filename)
@@ -139,7 +142,7 @@ class ViewProviderGPpart(object):
 
 
 def create_GPpart():
-    App.ActiveDocument.addObject("Part::FeaturePython",
+    newobj = FreeCAD.ActiveDocument.addObject("Part::FeaturePython",
             "GPpart", GPpart(),
             ViewProviderGPpart(), True)
 
@@ -147,5 +150,6 @@ def create_GPpart():
                              #MyGroup(),
                              #ViewProviderMyGroup(),
                              #True)
+    return newobj
 
 
