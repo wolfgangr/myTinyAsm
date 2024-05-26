@@ -83,7 +83,33 @@ class GPpart(object):
                     # ... and maintain current list
                     current_insp_list.append(newGPi)
 
+        # # stale
+        # for  old inspector list
+        old_inspNames_list = getattr(obj, 'maintainedInspectors')
+        new_inspNames_list = [i.Name for i in current_insp_list]
+        for old_insp in old_inspNames_list:
+            # 	if not in in current_inspector_list
+            if old_insp not in new_inspNames_list:
+                print ('stale inspector:', old_insp, '- check for deletion')
+                try:
+                    oldIobj = App.getDocument(old_insp)
+                    print
+                except:
+                    print ('cannot find object', old_insp , 'any more')
+                    oldIobj = None
 
+                if getattr (oldIobj, 'inspectedObject', False) is None:
+                    # default 'False' handles the case of missing this field althogether
+                    # or oldIobj is None
+                    # we do'nt delete this since we do not know what it is
+                    App.ActiveDocument.removeObject(old_insp)
+
+
+
+        # 		if not found attached part
+        # 			try to delete
+        #
+        # current_inspector_list -> write to old_inspector_list
 
 class ViewProviderGPpart(object):
     def __init__(self, vobj=None):
