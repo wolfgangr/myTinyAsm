@@ -73,21 +73,11 @@ class GPpart(object):
     def execute(self, obj):
         print('in execute of', obj.FullName)
         doc = FreeCAD.ActiveDocument
-        # search for inspectors down in GPParts DAG
-        ## TBD don't rely on InListRecursive
-        # current_insp_list =[]
-        # for obj_in in obj.InListRecursive:
-        #     if re.search( '^GPinspector', obj_in.Name):
-        #         current_insp_list.append(obj_in)
-        #         print ('appended', obj_in.Name)
-        #
-        # print ("current_insp_list:", current_insp_list)
 
-        # old_insp_list = getattr(obj, 'maintainedInspectors')
         current_insp_list = getattr(obj, 'maintainedInspectors')
         print('current_insp_list*FullName before processing', [i.FullName for i in current_insp_list])
+
         # search for dependent Links down in GPParts DAG
-        ## TBD - still don't rely on InListRecursive?? - well, Links we have...
         for obj_dlnk in obj.InListRecursive:
             ## TBD: this does not work for hidden link arrays
             if ((obj_dlnk.TypeId == 'App::Link' and obj_dlnk.ElementCount == 0 ) or
@@ -100,48 +90,27 @@ class GPpart(object):
                         if hasattr(itm, 'Proxy') ] :
                     print ('no inspector')
                     # ... attach inspector ...
-                    # ugp.create_uGP(obj_name = 'GPinspector', arg_tgt = None):
                     newGPi = ugp.create_uGP(obj_name = 'PtLnkGPi', arg_tgt = obj_dlnk)
                     # ... and maintain current list
                     current_insp_list.append(newGPi)
 
+        # this throws error in ?? cases if not all items are in doc
+        # if we need it, we may write a special safe function for that
         # print('current_insp_list*FullName after adding', [i.Name for i in current_insp_list])
 
         # remove stale isnpectors belonging to deleted Links
-        # for  old inspector list
-        ## switch to object storage
-        # old_insp_list = getattr(obj, 'maintainedInspectors')
-        ## old_inspNames_list = [i.Name for i in old_insp_list ]
-        # new_inspNames_list = [i.Name for i in current_insp_list]
-        # for old_insp in old_inspNames_list:
         for check_insp in getattr(obj, 'maintainedInspectors'):
-            # 	if not in in current_inspector_list
-            # if old_insp not in new_inspNames_list:
-            #     print ('stale inspector:', old_insp, '- check for deletion')
-            #     try:
-            #         oldIobj = App.getDocument(old_insp)
-            #         print
-            #     except:
-            #         print ('cannot find object', old_insp , 'any more')
-            #         oldIobj = None
-            #
-            #     print ('oldIobj:', oldIobj)
-            # 	if not found attached part
             if getattr (check_insp, 'inspectedObject', False) is None:
                 # default 'False' handles the case of 'missing this field althogether'
                 # as well as 'checkInsp is None'
                 # we do'nt delete this since we do not know what it is
                 print ('removing stale inspector',  check_insp.Name )
                 doc.removeObject(check_insp.Name)
-                ## TBD: remove from current_insp_list
 
-        # remove all objects that don' belong to the document any more
-        # .... obj in doc.Objects == False ...
-        # print('current_insp_list*FullName after removing', [i.Name for i in current_insp_list])
         current_insp_list = [i for i in current_insp_list if i in doc.Objects]
         print('current_insp_list*FullName after purging', [i.Name for i in current_insp_list])
 
-        # current_inspector_list -> write to old_inspector_list
+        # safe in Property for gui check and safe/restore
         obj.maintainedInspectors = current_insp_list
         obj.maintainedInspectorFNames = [i.Name for i in current_insp_list]
 
