@@ -43,10 +43,13 @@ lnk0.Label='Link0_single'
 lnk1 = doc.addObject('App::Link','Link1')
 lnk1.setLink(objPart)
 lnk1.Label='Link1_ar2vis'
+lnk1.ElementCount = 2
 
 lnk2 = doc.addObject('App::Link','Link2')
 lnk2.setLink(objPart)
 lnk2.Label='Link2_ar3hid'
+lnk2.ElementCount = 3
+lnk2.ShowElement = False
 
 doc.recompute(None,True,True)
 Gui.activeDocument().activeView().viewIsometric()
