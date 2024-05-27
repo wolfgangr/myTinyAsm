@@ -16,6 +16,7 @@ icon_rel_path = "/icons/PartLinkGlobalPlacementGetter.svg"
 
 parameter_group_name = "GP" # no trailing _ !
 tooltip = "retrieved Global Placement of sub-Object - read only"
+max_iter = 2 # how deep shall we follow link chains
 # ======================================
 
 
@@ -36,18 +37,41 @@ filePath = os.path.dirname(script_path)     # (__file__)
 iconPath = filePath + icon_rel_path
 print ('iconPath:', iconPath)
 
+# follow link chain until we find an object with a Group property
+def traverse_link_chain(lnk):
+    cnt_iter = max_iter
+    frontier = lnk
+
+    while True:
+        if hasattr(frontier, 'Group'):
+            return frontier
+            # --- normal step out here
+
+        if hasattr(frontier, 'LinkedObject'):
+            frontier = frontier.LinkedObject
+        else:
+            raise ValueError('Link chain does not end in Group object')
+
+        cnt_iter =  cnt_iter -1
+        if cnt_iter < 1:
+            raise ValueError(f"Link chain limit {cnt_iter} exceeded")
+
+
 # https://wiki.freecad.org/FeaturePython_Custom_Properties
 def sync_GPParams(obj_svtr, obj_svnd, pgname = parameter_group_name):
     # param List is kept as property of surveilling object
     old_PL = obj_svtr.inspectedSubobjectList
 
     # .. and has to match subobject List of object under surveillance
-    new_PL = list(obj_svnd.getSubObjects())
+##
+
+    eoLinkChain = traverse_link_chain (obj_svnd)
+    new_PL =  [ itm.Name + '.'  for itm in eoLinkChain.Group ]   # list(obj_svnd.getSubObjects())
     new_PL.insert(0, '')
     # new_PL.insert(1, '.')
-    if hasattr(obj_svnd, 'Origin'):
+    if hasattr(eoLinkChain, 'Origin')    # (obj_svnd, 'Origin'):
         new_PL.insert(1, 'Origin.')
-
+##
     print ('old_PL', old_PL)
     print ('new_PL', new_PL)
 
@@ -175,6 +199,9 @@ class GPLinkInspector():
                     plcList.append(plc)
 
                 print ("checker: so, idx_elems, plcList:", so, idx_elems, "\n", plcList)
-                setattr(obj, pg_prm, plcList)
+                try:
+                    setattr(obj, pg_prm, plcList)
+                except:
+                    pass
 
 
