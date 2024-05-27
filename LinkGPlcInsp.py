@@ -43,9 +43,10 @@ def sync_GPParams(obj_svtr, obj_svnd, pgname = parameter_group_name):
 
     # .. and has to match subobject List of object under surveillance
     new_PL = list(obj_svnd.getSubObjects())
-    new_PL.insert(0, '.')
+    new_PL.insert(0, '')
+    new_PL.insert(1, '.')
     if hasattr(obj_svnd, 'Origin'):
-        new_PL.insert(1, 'Origin.')
+        new_PL.insert(2, 'Origin.')
 
     print ('old_PL', old_PL)
     print ('new_PL', new_PL)
@@ -57,8 +58,8 @@ def sync_GPParams(obj_svtr, obj_svnd, pgname = parameter_group_name):
         prm2prop[prm] = pg_prm
         if not (prm in old_PL):
             print('create param: ' + pg_prm)
-            obj_svtr.addProperty("App::PropertyPlacement", pg_prm, pgname, tooltip)
-            # obj_svtr.setEditorMode(pg_prm, ['ReadOnly'])
+            obj_svtr.addProperty("App::PropertyPlacementList", pg_prm, pgname, tooltip)
+            obj_svtr.setEditorMode(pg_prm, ['ReadOnly'])
 
     # remove stale params
     for prm in old_PL:
@@ -135,18 +136,45 @@ class GPLinkInspector():
             print('no object for inspection selected')
             obj.Label=obj.Name
         else:
+            ## start inserted link type check
+            if surveilland.ElementCount == 0 :
+                print('  -- singleton Link: ',  surveilland.Name, ' --')
+                # idx_fmt = '{}.'
+                eff_elems = 1
+                idx_elems = ['']
+            # elif len(surveilland.ElementList) == 0 :
+            #     print('  -- hidden elem Link Array: ',  surveilland.Name, ' --')
+            #     # explore_call(self, obj, linkObj, index, linkElement)
+            #     # print ('### TBD ###')
+            #     # idx_fmt = '{}.'
+            #     eff_elems = surveilland.ElementCount
+            #     prefixes = [f"{i}." for i in range(eff_elems)]
+            else:
+                print('  -- Link Array: ',  surveilland.Name, ' --')
+                # prefix= str(index) + '.'
+                # idx_fmt = '{}.'
+                eff_ind = surveilland.ElementCount
+                idx_elems = [f"{i}." for i in range(eff_elems)]
+                ## end inserted link type check
+            #
             obj.Label='GPinsp_' + surveilland.Label
             paramDict = sync_GPParams(obj, surveilland)
             print ('paramDict:', paramDict)
-            prefix='' # valid for singleton links
+            # prefix='' # valid for singleton links
             for so in paramDict.keys():
+                ## this is now App::PropertyPlacementList
                 pg_prm = paramDict[so]
-                path = prefix + so  #  so.rstrip('.')
-                plc = surveilland.getSubObject(path, retType = 3)
-                prop = getattr(obj, pg_prm)
-                print("checker: so, pg_prm , prop, path, plc:",so, pg_prm , prop, path, plc)
-                if plc:
-                    # direct assignment of plc does not work
-                    setattr(obj, pg_prm, plc.Matrix)
+                plcList =[]
+                for lelem in idx_elems:
+
+                    # path = prefix + so  #  so.rstrip('.')
+                    path = lelem + so
+                    plc = surveilland.getSubObject(path, retType = 3)
+                    # prop = getattr(obj, pg_prm)
+                    # print("checker: so, pg_prm , path, plc:",so, pg_prm , path, plc)
+                    plcList.append(plc)
+
+                print ("checker: so, idx_elems, plcList:", so, idx_elems, "\n", plcList:)
+                setattr(obj, pg_prm, plcList)
 
 
