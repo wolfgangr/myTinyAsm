@@ -44,9 +44,9 @@ def sync_GPParams(obj_svtr, obj_svnd, pgname = parameter_group_name):
     # .. and has to match subobject List of object under surveillance
     new_PL = list(obj_svnd.getSubObjects())
     new_PL.insert(0, '')
-    new_PL.insert(1, '.')
+    # new_PL.insert(1, '.')
     if hasattr(obj_svnd, 'Origin'):
-        new_PL.insert(2, 'Origin.')
+        new_PL.insert(1, 'Origin.')
 
     print ('old_PL', old_PL)
     print ('new_PL', new_PL)
@@ -153,7 +153,7 @@ class GPLinkInspector():
                 print('  -- Link Array: ',  surveilland.Name, ' --')
                 # prefix= str(index) + '.'
                 # idx_fmt = '{}.'
-                eff_ind = surveilland.ElementCount
+                eff_elems = surveilland.ElementCount
                 idx_elems = [f"{i}." for i in range(eff_elems)]
                 ## end inserted link type check
             #
