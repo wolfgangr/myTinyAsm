@@ -46,6 +46,9 @@ def traverse_link_chain(lnk):
         if hasattr(frontier, 'Group'):
             return frontier
             # --- normal step out here
+        #  looks like even link chains supply a "Group" attribute
+        #  even if its not displayed in pyzo workspace
+        #  so we could have saved the effort here??
 
         if hasattr(frontier, 'LinkedObject'):
             frontier = frontier.LinkedObject

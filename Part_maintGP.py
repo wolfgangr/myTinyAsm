@@ -90,15 +90,17 @@ class GPpart(object):
             if (obj_dlnk.TypeId == 'App::Link'):
                 print ('doing inspector with ', obj_dlnk.Name)
 
-                # if dependent Link has no inspector ....
-                if 'GPinspector' not in [ itm.Proxy.Type
-                        for itm in obj_dlnk.InListRecursive
-                        if hasattr(itm, 'Proxy') ] :
-                    print ('no inspector')
-                    # ... attach inspector ...
-                    newGPi = lgp.create_uGPL(obj_name = 'PtLnkGPi', arg_tgt = obj_dlnk)
-                    # ... and maintain current list
-                    current_insp_list.append(newGPi)
+                # true for new to be processed ones, false for stale Links
+                if True: # bool(obj_dlnk.LinkedObject): # obj_dlnk.InListRecursive:
+                    # ... but has no inspector ....
+                    if 'GPLinkInspector' not in [ itm.Proxy.Type
+                            for itm in obj_dlnk.InListRecursive
+                            if hasattr(itm, 'Proxy') ] :
+                        print ('no inspector')
+                        # ... attach inspector ...
+                        newGPi = lgp.create_uGPL(obj_name = 'PtLnkGPi', arg_tgt = obj_dlnk)
+                        # ... and maintain current list
+                        current_insp_list.append(newGPi)
 
         # this throws error in ?? cases if not all items are in doc
         # if we need it, we may write a special safe function for that
