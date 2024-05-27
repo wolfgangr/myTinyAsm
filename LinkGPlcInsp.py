@@ -54,7 +54,7 @@ def traverse_link_chain(lnk):
 
         cnt_iter =  cnt_iter -1
         if cnt_iter < 1:
-            raise ValueError(f"Link chain limit {cnt_iter} exceeded")
+            raise ValueError("Link chain limit exceeded")
 
 
 # https://wiki.freecad.org/FeaturePython_Custom_Properties

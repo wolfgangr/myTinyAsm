@@ -76,7 +76,8 @@ class GPpart(object):
 
     def execute(self, obj):
         print('in execute of', obj.FullName)
-        doc = FreeCAD.ActiveDocument
+        # doc = FreeCAD.ActiveDocument
+        doc=obj.Document
 
         current_insp_list = getattr(obj, 'maintainedInspectors')
         print('current_insp_list*FullName before processing', [i.FullName for i in current_insp_list])
@@ -109,8 +110,12 @@ class GPpart(object):
                 # default 'False' handles the case of 'missing this field althogether'
                 # as well as 'checkInsp is None'
                 # we do'nt delete this since we do not know what it is
-                print ('removing stale inspector',  check_insp.Name )
-                doc.removeObject(check_insp.Name)
+
+                try:
+                    doc.removeObject(check_insp.Name)
+                    print ('removed stale inspector',  check_insp.Name )
+                except:
+                    print ('cannot remove stale inspector'  )
 
         current_insp_list = [i for i in current_insp_list if i in doc.Objects]
         print('current_insp_list*FullName after purging', [i.Name for i in current_insp_list])
