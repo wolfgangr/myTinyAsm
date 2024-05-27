@@ -174,7 +174,7 @@ class GPLinkInspector():
                     # print("checker: so, pg_prm , path, plc:",so, pg_prm , path, plc)
                     plcList.append(plc)
 
-                print ("checker: so, idx_elems, plcList:", so, idx_elems, "\n", plcList:)
+                print ("checker: so, idx_elems, plcList:", so, idx_elems, "\n", plcList)
                 setattr(obj, pg_prm, plcList)
 
 
