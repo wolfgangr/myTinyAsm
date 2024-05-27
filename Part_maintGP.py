@@ -27,6 +27,7 @@ import re
 import datetime
 # print(App)
 import dev.myTinyAsm.unveilGlobalPlacement as ugp
+import dev.myTinyAsm.LinkGPlcInsp as ugp
 # print(App)
 
 def dummy(): pass
