@@ -69,7 +69,7 @@ def sync_GPParams(obj_svtr, obj_svnd, pgname = parameter_group_name):
     new_PL =  [ itm.Name + '.'  for itm in eoLinkChain.Group ]   # list(obj_svnd.getSubObjects())
     new_PL.insert(0, '')
     # new_PL.insert(1, '.')
-    if hasattr(eoLinkChain, 'Origin')    # (obj_svnd, 'Origin'):
+    if hasattr(eoLinkChain, 'Origin'):    # (obj_svnd, 'Origin'):
         new_PL.insert(1, 'Origin.')
 ##
     print ('old_PL', old_PL)
