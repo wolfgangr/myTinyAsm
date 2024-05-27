@@ -71,7 +71,7 @@ def sync_GPParams(obj_svtr, obj_svnd, pgname = parameter_group_name):
     return prm2prop
 
 
-def create_uGP(obj_name = 'GPinspector', arg_tgt = None):
+def create_uGPL(obj_name = 'GPLinkInspector', arg_tgt = None):
     """
     Object creation method
     target priority:
@@ -81,7 +81,7 @@ def create_uGP(obj_name = 'GPinspector', arg_tgt = None):
     """
 
     obj = App.ActiveDocument.addObject('App::FeaturePython', obj_name)
-    GPinspector(obj)
+    GPLinkInspector(obj)
 
     if arg_tgt:
         obj.inspectedObject = arg_tgt
@@ -97,12 +97,12 @@ def create_uGP(obj_name = 'GPinspector', arg_tgt = None):
     App.ActiveDocument.recompute()
     return obj
 
-class GPinspector():
+class GPLinkInspector():
     def __init__(self, obj):
         """
         Default constructor
         """
-        self.Type = 'GPinspector'
+        self.Type = 'GPLinkInspector'
         obj.Proxy = self
         # obj.addProperty('App::PropertyString', 'Description', 'Base', 'Box description')
         obj.addProperty("App::PropertyLink", "inspectedObject", "Base",

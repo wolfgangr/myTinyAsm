@@ -11,6 +11,10 @@ import FreeCAD as App
 
 import dev.myTinyAsm.Part_maintGP as gpp
 
+# https://realpython.com/lessons/reloading-module/
+import importlib
+importlib.reload(gpp)
+
 doc = App.newDocument()
 
 # objPart = doc.addObject('App::Part','Part')

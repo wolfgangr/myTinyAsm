@@ -26,9 +26,12 @@ import os
 import re
 import datetime
 # print(App)
-import dev.myTinyAsm.unveilGlobalPlacement as ugp
-import dev.myTinyAsm.LinkGPlcInsp as ugp
+# import dev.myTinyAsm.unveilGlobalPlacement as ugp
+import dev.myTinyAsm.LinkGPlcInsp as lgp
 # print(App)
+
+import importlib
+importlib.reload(lgp)
 
 def dummy(): pass
 script_path = (dummy.__code__.co_filename)
@@ -91,7 +94,7 @@ class GPpart(object):
                         if hasattr(itm, 'Proxy') ] :
                     print ('no inspector')
                     # ... attach inspector ...
-                    newGPi = ugp.create_uGP(obj_name = 'PtLnkGPi', arg_tgt = obj_dlnk)
+                    newGPi = lgp.create_uGPL(obj_name = 'PtLnkGPi', arg_tgt = obj_dlnk)
                     # ... and maintain current list
                     current_insp_list.append(newGPi)
 
