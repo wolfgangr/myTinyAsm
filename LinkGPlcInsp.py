@@ -25,17 +25,12 @@ import os
 import re
 import datetime
 
-# filePath = os.getcwd()
-# filePath = os.path.dirname(sys.argv[0])
 # https://stackoverflow.com/questions/52778687/nameerror-file-is-not-defined
-#       (OMG....)
 def dummy(): pass
 script_path = (dummy.__code__.co_filename)
 filePath = os.path.dirname(script_path)     # (__file__)
-# iconPath = filePath + "/icons/myIcon.svg"
-# iconPath = filePath + "/icons/myIcon.svg"
 iconPath = filePath + icon_rel_path
-print ('iconPath:', iconPath)
+# print ('iconPath:', iconPath)
 
 # follow link chain until we find an object with a Group property
 def traverse_link_chain(lnk):
@@ -66,17 +61,15 @@ def sync_GPParams(obj_svtr, obj_svnd, pgname = parameter_group_name):
     old_PL = obj_svtr.inspectedSubobjectList
 
     # .. and has to match subobject List of object under surveillance
-##
-
     eoLinkChain = traverse_link_chain (obj_svnd)
     new_PL =  [ itm.Name + '.'  for itm in eoLinkChain.Group ]   # list(obj_svnd.getSubObjects())
     new_PL.insert(0, '')
     # new_PL.insert(1, '.')
     if hasattr(eoLinkChain, 'Origin'):    # (obj_svnd, 'Origin'):
         new_PL.insert(1, 'Origin.')
-##
-    print ('old_PL', old_PL)
-    print ('new_PL', new_PL)
+
+    # print ('old_PL', old_PL)
+    # print ('new_PL', new_PL)
 
     prm2prop = {} # keep a dictionary of subobj name -> proeprty name
     # add missing params
@@ -84,7 +77,7 @@ def sync_GPParams(obj_svtr, obj_svnd, pgname = parameter_group_name):
         pg_prm = pgname + '_' + prm.rstrip('.')
         prm2prop[prm] = pg_prm
         if not (prm in old_PL):
-            print('create param: ' + pg_prm)
+            # print('create param: ' + pg_prm)
             obj_svtr.addProperty("App::PropertyPlacementList", pg_prm, pgname, tooltip)
             obj_svtr.setEditorMode(pg_prm, ['ReadOnly'])
 
@@ -92,7 +85,7 @@ def sync_GPParams(obj_svtr, obj_svnd, pgname = parameter_group_name):
     for prm in old_PL:
         pg_prm = pgname + '_' + prm.rstrip('.')
         if not (prm in new_PL):
-            print('delete param: ' + pg_prm)
+            # print('delete param: ' + pg_prm)
             obj_svtr.removeProperty(pg_prm)
 
     obj_svtr.inspectedSubobjectList = new_PL
@@ -117,7 +110,7 @@ def create_uGPL(obj_name = 'GPLinkInspector', arg_tgt = None):
         try:
             target = FreeCADGui.Selection.getSelection()[0]
             obj.inspectedObject = target
-            print(f"attached to surveillance of object: <{target.Name}>")
+            # print(f"attached to surveillance of object: <{target.Name}>")
         except:
             print('no valid object selected, leave empty')
             pass
@@ -156,55 +149,40 @@ class GPLinkInspector():
         """
         Called on document recompute
         """
-        print('Recomputing {0:s} ({1:s})'.format(obj.Name, self.Type))
+        # print('Recomputing {0:s} ({1:s})'.format(obj.Name, self.Type))
         #
         surveilland = obj.inspectedObject
         if not surveilland:
             print('no object for inspection selected')
             obj.Label=obj.Name
         else:
-            ## start inserted link type check
             if surveilland.ElementCount == 0 :
-                print('  -- singleton Link: ',  surveilland.Name, ' --')
-                # idx_fmt = '{}.'
+                # print('  -- singleton Link: ',  surveilland.Name, ' --')
                 eff_elems = 1
                 idx_elems = ['']
             # elif len(surveilland.ElementList) == 0 :
             #     print('  -- hidden elem Link Array: ',  surveilland.Name, ' --')
-            #     # explore_call(self, obj, linkObj, index, linkElement)
-            #     # print ('### TBD ###')
-            #     # idx_fmt = '{}.'
-            #     eff_elems = surveilland.ElementCount
-            #     prefixes = [f"{i}." for i in range(eff_elems)]
             else:
-                print('  -- Link Array: ',  surveilland.Name, ' --')
-                # prefix= str(index) + '.'
-                # idx_fmt = '{}.'
+                # print('  -- Link Array: ',  surveilland.Name, ' --')
                 eff_elems = surveilland.ElementCount
                 idx_elems = [f"{i}." for i in range(eff_elems)]
-                ## end inserted link type check
-            #
             obj.Label='GPinsp_' + surveilland.Label
             paramDict = sync_GPParams(obj, surveilland)
-            print ('paramDict:', paramDict)
-            # prefix='' # valid for singleton links
+            # print ('paramDict:', paramDict)
+
             for so in paramDict.keys():
-                ## this is now App::PropertyPlacementList
                 pg_prm = paramDict[so]
                 plcList =[]
                 for lelem in idx_elems:
-
-                    # path = prefix + so  #  so.rstrip('.')
                     path = lelem + so
                     plc = surveilland.getSubObject(path, retType = 3)
-                    # prop = getattr(obj, pg_prm)
-                    # print("checker: so, pg_prm , path, plc:",so, pg_prm , path, plc)
                     plcList.append(plc)
 
-                print ("checker: so, idx_elems, plcList:", so, idx_elems, "\n", plcList)
+                # print ("checker: so, idx_elems, plcList:", so, idx_elems, "\n", plcList)
                 try:
                     setattr(obj, pg_prm, plcList)
                 except:
+                    print ( 'failed ot attach placement list')
                     pass
 
 
