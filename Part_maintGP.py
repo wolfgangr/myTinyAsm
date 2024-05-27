@@ -84,8 +84,9 @@ class GPpart(object):
         # search for dependent Links down in GPParts DAG
         for obj_dlnk in obj.InListRecursive:
             ## TBD: this does not work for hidden link arrays
-            if ((obj_dlnk.TypeId == 'App::Link' and obj_dlnk.ElementCount == 0 ) or
-                    (obj_dlnk.TypeId == 'App::LinkElement')):
+            # if ((obj_dlnk.TypeId == 'App::Link' and obj_dlnk.ElementCount == 0 ) or
+            #        (obj_dlnk.TypeId == 'App::LinkElement')):
+            if (obj_dlnk.TypeId == 'App::Link'):
                 print ('doing inspector with ', obj_dlnk.Name)
 
                 # if dependent Link has no inspector ....
