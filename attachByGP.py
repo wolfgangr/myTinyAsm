@@ -114,4 +114,23 @@ class GPattach():
         # pass
 
     def execute(self, obj):
+
+        # retrieve subobjects and set enum for selection
+        if obj.a1AttParent:
+            if hasattr(obj.a1AttParent, 'Group'):
+                subobjs = [ itm.Name for itm in obj.a1AttParent.Group ]
+                if hasattr(obj.a1AttParent, 'Origin'):
+                    subobjs.append('Origin')
+
+                obj.a2AttParentSubobjects = subobjs
+
+        if obj.b1AttChild:
+            if hasattr(obj.b1AttChild, 'Group'):
+                subobjs = [ itm.Name for itm in obj.b1AttChild.Group ]
+                if hasattr(obj.b1AttChild, 'Origin'):
+                    subobjs.append('Origin')
+
+                obj.b2AttChildSubobjects = subobjs
+
+        ##
         pass
