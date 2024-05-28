@@ -133,6 +133,10 @@ class GPattach():
                 obj.b2AttChildSubobjects = subobjs
 
         # retrieve selected subobjects real global Placement
+        plcParent = None
+        plcChild_inv = None
+        plcChild_inv = None
+
         pathParent = obj.a2AttParentSubobjects
         if pathParent:
             pathParent += '.'
@@ -156,7 +160,7 @@ class GPattach():
                 print(f"cannot retrieve placement of child subObject named >{pathChild}<")
 
         # try to construct a final result?
-        if  plcChild_inv and plcParent:
+        if  plcChild_inv  and plcParent:
             plcOffset = obj.c1AttachmentOffset
             plcResult = plcParent.multiply(plcOffset).multiply(plcChild_inv)
             obj.c3AttChildResultPlc = plcResult.Matrix
