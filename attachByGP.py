@@ -134,12 +134,18 @@ class GPattach():
 
         # retrieve selected subobjects real global Placement
         pathParent = obj.a2AttParentSubobjects + '.'
-        plcParent = obj.a1AttParent.getSubObject(pathParent',3)
-        obj.a3AttParentSubobjPlacement =plcParent.Matrix
+        plcParent = obj.a1AttParent.getSubObject(pathParent,3)
+        if plcParent:
+            obj.a3AttParentSubobjPlacement =plcParent.Matrix
+        else:
+            print(f"cannot retrieve placement of parent subObject named >{pathParent}<")
 
         pathChild = obj.b2AttChildSubobjects + '.'
-        plcChild = obj.b1AttChild.getSubObject(pathChild',3)
-        obj.b3AttChildSubobjPlacement = plcChild.Matrix
+        plcChild = obj.b1AttChild.getSubObject(pathChild,3)
+        if plcChild:
+            obj.b3AttChildSubobjPlacement = plcChild.Matrix
+        else:
+            print(f"cannot retrieve placement of child subObject named >{pathChild}<")
 
 
 
