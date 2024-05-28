@@ -115,7 +115,7 @@ class GPattach():
 
     def execute(self, obj):
 
-        # retrieve subobjects and set enum for selection
+        # retrieve list of subobjects and set enum for selection
         if obj.a1AttParent:
             if hasattr(obj.a1AttParent, 'Group'):
                 subobjs = [ itm.Name for itm in obj.a1AttParent.Group ]
@@ -131,6 +131,17 @@ class GPattach():
                     subobjs.append('Origin')
 
                 obj.b2AttChildSubobjects = subobjs
+
+        # retrieve selected subobjects real global Placement
+        pathParent = obj.a2AttParentSubobjects + '.'
+        plcParent = obj.a1AttParent.getSubObject(pathParent',3)
+        obj.a3AttParentSubobjPlacement =plcParent.Matrix
+
+        pathChild = obj.b2AttChildSubobjects + '.'
+        plcChild = obj.b1AttChild.getSubObject(pathChild',3)
+        obj.b3AttChildSubobjPlacement = plcChild.Matrix
+
+
 
         ##
         pass
