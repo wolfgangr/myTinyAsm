@@ -113,12 +113,15 @@ class GPattach():
 
         # calculation
         obj.addProperty("App::PropertyPlacement", "c2AttChildPlcInverse", "Attachment",
-            'inverse of global Placement of Link Target SubObject - read only)
+            'inverse of global Placement of Link Target SubObject - read only')
         obj.setEditorMode("c2AttChildPlcInverse", ['ReadOnly'])
 
         obj.addProperty("App::PropertyPlacement", "c3AttChildResultPlc", "Attachment",
             'effective Placement matrix applied to the child = invert(ChildPLC) * AttOffs * ParentPLC')
         obj.setEditorMode("c3AttChildResultPlc", ['ReadOnly'])
+
+        # obj.ExpressionEngine.append(('LinkPlacement', 'c3AttChildResultPlc'))
+        # obj.setExpression('LinkPlacement', 'c3AttChildResultPlc')
 
         # result
 
@@ -199,8 +202,12 @@ class GPattach():
             obj.c3AttChildResultPlc = plcResult.Matrix
 
             # in there is no expression inside ....
-            if 'LinkPlacement' not in [ ex[0] for ex in  obj.ExpressionEngine ]:
+            if 'LinkPlacement' in [ ex[0] for ex in  obj.ExpressionEngine ]:
+                print ("custom expression in LinkPlacement - won't overwrite" )
+            else:
+                # do your job
                 obj.LinkPlacement =  plcResult.Matrix
+
 
         else:
             print('cannot calculate final attachment')
