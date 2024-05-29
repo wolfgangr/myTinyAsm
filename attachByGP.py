@@ -22,12 +22,13 @@ import re
 import datetime
 
 
-def create_GPatt(obj_name = 'GPattach', attParent = None, attChild = None ):
+def create_GPatt(obj_name = 'GPattach', attChild = None, attParent = None):
     """
     Object creation method
     target priority:
-    - "arg_tgt" call argument
-    - first obj in GUI selection
+    - "attXXX" call argument
+    - pop'd obj in GUI selection -> child
+      pop'd obj in GUI selection -> parent
     - default: None - to be assigned later
     """
 
@@ -44,15 +45,20 @@ def create_GPatt(obj_name = 'GPattach', attParent = None, attChild = None ):
         except:
             print('no object selected')
 
+    if attChild:
+        # obj.b1AttChild = attChild
+        obj.LinkedObject = attChild
+
+    elif selection:
+        # obj.b1AttChild = selection.pop(0)
+        obj.LinkedObject = selection.pop(0)
+
+
     if attParent:
         obj.a1AttParent = attParent
     elif selection:
         obj.a1AttParent = selection.pop(0)
 
-    if attChild:
-        obj.b1AttChild = attChild
-    elif selection:
-        obj.b1AttChild = selection.pop(0)
 
 
 
@@ -100,7 +106,7 @@ class GPattach():
         #     'The container Object where the attachment child pivot resides in ')
 
         obj.addProperty("App::PropertyString", "b1AttChild", "Attachment",
-             'The container Object where the attachment child pivot resides in - read only')
+             'The container Object to be attached - synced to Linked object - change this instead')
         obj.setEditorMode('b1AttChild', ['ReadOnly'])
 
         #
