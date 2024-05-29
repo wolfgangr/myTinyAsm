@@ -31,7 +31,11 @@ def create_GPatt(obj_name = 'GPattach', attParent = None, attChild = None ):
     - default: None - to be assigned later
     """
 
-    obj = App.ActiveDocument.addObject('App::FeaturePython', obj_name)
+    # obj = App.ActiveDocument.addObject('App::FeaturePython', obj_name)
+    obj = App.ActiveDocument.addObject('App::LinkPython', obj_name)
+    # obj = App.ActiveDocument.addObject('App::LinkGroupPython', obj_name)
+    # App::LinkPython
+
     GPattach(obj)
 
     if not (attParent and attChild):
@@ -64,6 +68,11 @@ class GPattach():
         self.Type = 'GPattach'
         obj.Proxy = self
         # obj.addProperty('App::PropertyString', 'Description', 'Base', 'Box description')
+
+        # https://wiki.freecad.org/Scripted_objects/en#Available_extensions
+        # obj.addExtension('Part::AttachExtensionPython')
+        # App::LinkExtensionPython
+        # obj.addExtension('App::LinkExtensionPython')
 
         # Parent
         obj.addProperty("App::PropertyLink", "a1AttParent", "Attachment",
@@ -138,7 +147,7 @@ class GPattach():
         plcChild_inv = None
 
         pathParent = obj.a2AttParentSubobjects
-        if pathParent:
+        if obj.a1AttParent and pathParent:
             pathParent += '.'
             plcParent = obj.a1AttParent.getSubObject(pathParent,3)
             if plcParent:
@@ -148,7 +157,7 @@ class GPattach():
 
         #
         pathChild = obj.b2AttChildSubobjects
-        if pathChild:
+        if obj.b1AttChild and pathChild:
             pathChild += '.'
             plcChild = obj.b1AttChild.getSubObject(pathChild,3)
             if plcChild:
@@ -163,7 +172,7 @@ class GPattach():
         if  plcChild_inv  and plcParent:
             plcOffset = obj.c1AttachmentOffset
             plcResult = plcParent.multiply(plcOffset).multiply(plcChild_inv)
-            obj.c3AttChildResultPlc = plcResult.Matrix
+            # # obj.c3AttChildResultPlc = plcResult.Matrix
         else:
             print('cannot calculate final attachment')
 
