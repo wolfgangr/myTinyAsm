@@ -60,6 +60,8 @@ def create_GPatt(obj_name = 'GPattach', attParent = None, attChild = None ):
     return obj
 
 
+
+
 class GPattach():
     def __init__(self, obj):
         """
@@ -67,6 +69,11 @@ class GPattach():
         """
         self.Type = 'GPattach'
         obj.Proxy = self
+
+        # https://forum.freecad.org/viewtopic.php?p=760203#p760203
+        # https://wiki.freecad.org/Scripted_objects_with_attachment
+        obj.ViewObject.Proxy = 0
+
         # obj.addProperty('App::PropertyString', 'Description', 'Base', 'Box description')
 
         # https://wiki.freecad.org/Scripted_objects/en#Available_extensions
