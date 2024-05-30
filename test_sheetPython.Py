@@ -11,6 +11,11 @@ import re
 import datetime
 import Spreadsheet
 
+# from xml.sax.handler import ContentHandler
+# import xml.sax.handler
+import xml.sax
+
+CONST_MYBang = "'#!"
 
 # check if propObj is 'cells' and if so, dump XML
 # otherwise return False
@@ -21,15 +26,34 @@ def debug_cells(obj, prop):
         return False
 
     propObj = getattr(obj, 'cells')
-
-    if not hasattr(propObj, 'TypeId'):
-        return False
-
-    if not (str(propObj.TypeId) == 'Spreadsheet::PropertySheet'):
-        return False
-
+    #
+    # if not hasattr(propObj, 'TypeId'):
+    #     return False
+    #
+    # if not (str(propObj.TypeId) == 'Spreadsheet::PropertySheet'):
+    #     return False
     print (propObj.Content)
     return True # propObj.Content
+
+class sheetSaxHandler(xml.sax.handler.ContentHandler):
+
+    def startElement(self, name, attrs):
+        print(f"BEGIN: <{name}>, {attrs.keys()}")
+        if attrs.__contains__('address') and attrs.__contains__('content'):
+            attr = attrs.getValue('address')
+            val  = attrs.getValue('content')
+            print(f"\t{attr} -> {val}")
+            match = re.search(f"^{CONST_MYBang}(.*)", val)
+            if match:
+                evld = match.groups()[0]
+                print(f"\t\tTBD: eval({evld})")
+
+    def endElement(self, name):
+        print(f"END: </{name}>")
+
+    def characters(self, content):
+        if content.strip() != "":
+            print("CONTENT:", repr(content))
 
 
 # https://forum.freecad.org/viewtopic.php?p=182016#p182016
@@ -49,10 +73,8 @@ class pySheetViewProvider:
     def onBeforeChange(proxy,obj,prop):
         print ("VP before change:", prop)
 
-
     def onChanged(proxy,obj,prop):
         print ("VP changed:", prop)
-
 
 class pySheet():
     """
@@ -93,12 +115,14 @@ class pySheet():
     def onBeforeChange(proxy,obj,prop):
         print ("before change:", prop)
         debug_cells(obj, prop)
-
+        if prop == 'cells':
+            xml.sax.parseString(obj.cells.Content, sheetSaxHandler())
 
     def onChanged(proxy,obj,prop):
         print ("changed:", prop)
         debug_cells(obj, prop)
-
+        if prop == 'cells':
+            xml.sax.parseString(obj.cells.Content, sheetSaxHandler())
 
 
 def create_pySheet(obj_name='pySheet', document=None):
