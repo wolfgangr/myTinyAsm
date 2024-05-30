@@ -11,6 +11,29 @@ import re
 import datetime
 import Spreadsheet
 
+
+# https://forum.freecad.org/viewtopic.php?p=182016#p182016
+class pySheetViewProvider:
+    ''' basic defs '''
+
+    def __init__(self, obj):
+        # obj.Proxy = self
+        self.Object = obj
+
+    #	def __getstate__(self):
+    #		return None
+
+    #	def __setstate__(self, state):
+    #		return None
+
+    def onBeforeChange(proxy,obj,prop):
+        print ("VP before change:", prop)
+
+
+    def onChanged(proxy,obj,prop):
+        print ("VP changed:", prop)
+
+
 class pySheet():
     """
     Simple Custom Box Object
@@ -29,6 +52,9 @@ class pySheet():
         self.Type = 'pySheet'
 
         obj.Proxy = self
+
+        pySheetViewProvider(obj.ViewObject)
+
         # obj.ViewObject.Proxy = 0  # Mandatory unless ViewProvider is coded
 
         # obj.addProperty('App::PropertyLength', 'Length',
@@ -38,11 +64,20 @@ class pySheet():
         # or able to attach parameterically to other objects
         # obj.addExtension('Part::AttachExtensionPython')
 
-    def execute(self, obj):
-        """
-        Called on document recompute
-        """
-        pass
+    # def execute(self, obj):
+    #     """
+    #     Called on document recompute
+    #     """
+    #     pass
+
+    def onBeforeChange(proxy,obj,prop):
+        print ("before change:", prop)
+
+
+    def onChanged(proxy,obj,prop):
+        print ("changed:", prop)
+
+
 
 
 def create_pySheet(obj_name='pySheet', document=None):
@@ -59,7 +94,7 @@ def create_pySheet(obj_name='pySheet', document=None):
     pySheet(obj)
     # obj.ViewObject.Proxy = 0  # Mandatory unless ViewProvider is coded
 
-    return obj
+    # return obj
 
 
 # document = App.ActiveDocument
