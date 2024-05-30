@@ -45,10 +45,12 @@ class pySheet():
         pass
 
 
-def create_pySheet(obj_name, document):
+def create_pySheet(obj_name='pySheet', document=None):
     """
     Create a pythonized Spreadsheet.
     """
+    if not document:
+        document = App.ActiveDocument
     # obj = document.addObject('Part::FeaturePython', obj_name)
     # Spreadsheet::SheetPython
     obj = document.addObject('Spreadsheet::SheetPython', obj_name)
