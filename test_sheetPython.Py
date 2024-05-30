@@ -15,7 +15,13 @@ import Spreadsheet
 # check if propObj is 'cells' and if so, dump XML
 # otherwise return False
 #
-def debug_cells(propObj = None):
+def debug_cells(obj, prop):
+
+    if prop != 'cells':
+        return False
+
+    propObj = getattr(obj, 'cells')
+
     if not hasattr(propObj, 'TypeId'):
         return False
 
@@ -86,12 +92,12 @@ class pySheet():
 
     def onBeforeChange(proxy,obj,prop):
         print ("before change:", prop)
-        debug_cells(prop)
+        debug_cells(obj, prop)
 
 
     def onChanged(proxy,obj,prop):
         print ("changed:", prop)
-        debug_cells(prop)
+        debug_cells(obj, prop)
 
 
 
