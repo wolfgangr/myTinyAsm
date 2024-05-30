@@ -12,6 +12,20 @@ import datetime
 import Spreadsheet
 
 
+# check if propObj is 'cells' and if so, dump XML
+# otherwise return False
+#
+def debug_cells(propObj = None):
+    if not hasattr(propObj, 'TypeId'):
+        return False
+
+    if not (str(propObj.TypeId) == 'Spreadsheet::PropertySheet'):
+        return False
+
+    print (propObj.Content)
+    return True # propObj.Content
+
+
 # https://forum.freecad.org/viewtopic.php?p=182016#p182016
 class pySheetViewProvider:
     ''' basic defs '''
@@ -72,11 +86,12 @@ class pySheet():
 
     def onBeforeChange(proxy,obj,prop):
         print ("before change:", prop)
+        debug_cells(prop)
 
 
     def onChanged(proxy,obj,prop):
         print ("changed:", prop)
-
+        debug_cells(prop)
 
 
 
