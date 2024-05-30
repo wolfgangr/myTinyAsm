@@ -29,7 +29,7 @@ class pySheet():
         self.Type = 'pySheet'
 
         obj.Proxy = self
-        obj.ViewObject.Proxy = 0  # Mandatory unless ViewProvider is coded
+        # obj.ViewObject.Proxy = 0  # Mandatory unless ViewProvider is coded
 
         # obj.addProperty('App::PropertyLength', 'Length',
         #                 'Dimensions', 'Box length').Length = 10.0
