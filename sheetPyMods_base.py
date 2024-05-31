@@ -5,3 +5,7 @@ def select(mylist: list, pos: int):
 
     except:
         return None
+
+# wrapper for arg list
+def select_args(pos: int, *args):
+    return select(args, pos)

@@ -59,11 +59,8 @@ def eval_param(obj, param: str):
     if match:
         return match.group(1)
 
-    # if it starts with '=' try to evaluate it as FreeCAD Expression
-    # .... looks good, and it even matches ...
-    # <<strings>>
-    # cell and object references
-    # numbers and arithmetic expressions
+    # '=...' try  FreeCAD Expression;  even matches ...
+    #   <<strings>>, cell and object references,  numbers and arithmetic expressions
     match = re.search(r"=(.*)", ps )
     if match:
         try:
