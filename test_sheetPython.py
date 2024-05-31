@@ -15,7 +15,10 @@ import Spreadsheet
 # import xml.sax.handler
 import xml.sax
 
-CONST_MYBang = "'#!"
+# CONST_MYBang = "'#!"
+CONST_DEF_prefix ="cpy_def"
+CONST_RES_prefix ="cpy_res"
+
 
 # check if propObj is 'cells' and if so, dump XML
 # otherwise return False
@@ -41,6 +44,18 @@ def recompute_cells(obj):
     range_str = u_range[0] + ':' + u_range[1]
     if range_str != '@0:@0':       # if sheet is not empty
         obj.recomputeCells(range_str)
+
+def update_res_fields(obj):
+    # cycle over function definitions
+    for prop in obj.PropertiesList:
+        # CONST_DEF_prefix
+        match = re.search(f'^{CONST_DEF_prefix}_(.*)', prop)
+        if match:
+            varname = match.group(1)
+            print (f"matched: {prop} -> {varname}")
+            prop_res = f"{CONST_RES_prefix}_{varname}"
+            print (f"result:     -> {prop_res}")
+
 
 class sheetSaxHandler(xml.sax.handler.ContentHandler):
 
@@ -116,18 +131,19 @@ class pySheet():
         # obj.addProperty('App::PropertyLength', 'Length',
         #                 'Dimensions', 'Box length').Length = 10.0
 
-        # Needed to make this object "attachable",
-        # or able to attach parameterically to other objects
-        # obj.addExtension('Part::AttachExtensionPython')
+        obj.addProperty('App::PropertyStringList', CONST_DEF_prefix + '_dummy', CONST_DEF_prefix ,
+            'template for custom python function definition')
+
 
     def execute(self, obj):
         """
         Called on document recompute
         """
         print('what shall I do to execute?')
-        # xml.sax.parseString(obj.cells.Content, sheetSaxRecompAllCells())
-        # obj.execute(self, obj)
+        ## sync res fields
+        update_res_fields(obj)
         recompute_cells(obj)
+
 
     def onBeforeChange(proxy,obj,prop):
         print ("before change:", prop)
