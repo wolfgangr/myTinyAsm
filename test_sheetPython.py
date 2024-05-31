@@ -46,20 +46,37 @@ def recompute_cells(obj):
         obj.recomputeCells(range_str)
 
 def update_res_fields(obj):
-    # cycle over function definitions
+    # cycle over function definitions properties
     for prop in obj.PropertiesList:
-        # CONST_DEF_prefix
         match = re.search(f'^{CONST_DEF_prefix}_(.*)', prop)
         if match:
             varname = match.group(1)
             print (f"matched: {prop} -> {varname}")
+            deflist = obj.getPropertyByName(prop)
+            if deflist.__class__ is not list:
+                raise TypeError(f"prop must be of Type 'App::PropertyStringList' ")
+            # find or create matching result property
             prop_res = f"{CONST_RES_prefix}_{varname}"
             print (f"result:     -> {prop_res}")
             if prop_res not in obj.PropertiesList:
                 # obj.addProperty('App::PropertyPythonObject', 'cpy_res_dummy')
                 obj.addProperty('App::PropertyPythonObject', prop_res, CONST_RES_prefix,
                     f"result property for {prop}")
+                obj.setPropertyStatus(prop_res, 'ReadOnly')
+                obj.touch()  # does this recurse??
 
+            ## perform calculation
+
+    # remove stale result fields
+        # cycle over result definitions properties
+    for prop in obj.PropertiesList:
+        match = re.search(f'^{CONST_RES_prefix}_(.*)', prop)
+        if match:
+            varname = match.group(1)
+            prop_def = f"{CONST_DEF_prefix}_{varname}"
+            if not prop_def in obj.PropertiesList:
+                print(f"stale result property: {prop} - no matching def: {prop_def} - going to delete")
+                obj.removeProperty(prop)
 
 class sheetSaxHandler(xml.sax.handler.ContentHandler):
 
