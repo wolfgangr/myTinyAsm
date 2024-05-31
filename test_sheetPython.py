@@ -55,6 +55,10 @@ def update_res_fields(obj):
             print (f"matched: {prop} -> {varname}")
             prop_res = f"{CONST_RES_prefix}_{varname}"
             print (f"result:     -> {prop_res}")
+            if prop_res not in obj.PropertiesList:
+                # obj.addProperty('App::PropertyPythonObject', 'cpy_res_dummy')
+                obj.addProperty('App::PropertyPythonObject', prop_res, CONST_RES_prefix,
+                    f"result property for {prop}")
 
 
 class sheetSaxHandler(xml.sax.handler.ContentHandler):
