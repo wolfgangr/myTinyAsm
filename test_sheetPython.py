@@ -35,6 +35,13 @@ def debug_cells(obj, prop):
     print (propObj.Content)
     return True # propObj.Content
 
+# required if we overload execute()
+def recompute_cells(obj):
+    u_range = obj.getUsedRange()
+    range_str = u_range[0] + ':' + u_range[1]
+    if range_str != '@0:@0':       # if sheet is not empty
+        obj.recomputeCells(range_str)
+
 class sheetSaxHandler(xml.sax.handler.ContentHandler):
 
     def startElement(self, name, attrs):
@@ -120,6 +127,7 @@ class pySheet():
         print('what shall I do to execute?')
         # xml.sax.parseString(obj.cells.Content, sheetSaxRecompAllCells())
         # obj.execute(self, obj)
+        recompute_cells(obj)
 
     def onBeforeChange(proxy,obj,prop):
         print ("before change:", prop)
