@@ -6,14 +6,14 @@
 # https://wiki.freecad.org/Scripted_objects_with_attachment
 
 import FreeCAD as App
-import os
+# import os
 import re
 import datetime
 import Spreadsheet
 
 # from xml.sax.handler import ContentHandler
 # import xml.sax.handler
-import xml.sax
+# import xml.sax
 
 # CONST_MYBang = "'#!"
 CONST_DEF_prefix ="cpy_def"
@@ -44,6 +44,38 @@ def recompute_cells(obj):
     range_str = u_range[0] + ':' + u_range[1]
     if range_str != '@0:@0':       # if sheet is not empty
         obj.recomputeCells(range_str)
+
+# evaluate parameters from def-List
+def eval_param(obj, param):
+    # remove leading / trailing  spaces
+    ps = param.strip()
+
+    # is it a string?
+    match = re.search(r"^\'(.*)\'$", ps )
+    if match:
+        return match.group(1)
+
+    match = re.search(r"^\"(.*)\"$", ps )
+    if match:
+        return match.group(1)
+
+    # can we evaluate it as an skd like ### obj.evalExpression('Part.Placement')
+    # .... looks good, and it even matches ...
+    # <<strings>>
+    # cell and object references
+    # numbers and arithmetic expressions
+    try:
+        result = obj.evalExpression( ps )
+
+    except:
+        result = None
+
+    return result
+
+## calc eval
+
+##
+
 
 def update_res_fields(obj):
     # cycle over function definitions properties
@@ -98,13 +130,13 @@ class sheetSaxHandler(xml.sax.handler.ContentHandler):
         if content.strip() != "":
             print("CONTENT:", repr(content))
 
-class sheetSaxRecompAllCells(xml.sax.handler.ContentHandler):
-    def startElement(self, name, attrs):
-        print(f"BEGIN: <{name}>, {attrs.keys()}")
-        if name == 'Cell':
-            addr = attrs.getValue('address')
-            print(f'doing obj.recomputeCells({addr})')
-            obj.recomputeCells(addr)
+# class sheetSaxRecompAllCells(xml.sax.handler.ContentHandler):
+#     def startElement(self, name, attrs):
+#         print(f"BEGIN: <{name}>, {attrs.keys()}")
+#         if name == 'Cell':
+#             addr = attrs.getValue('address')
+#             print(f'doing obj.recomputeCells({addr})')
+#             obj.recomputeCells(addr)
 
 # https://forum.freecad.org/viewtopic.php?p=182016#p182016
 class pySheetViewProvider:
