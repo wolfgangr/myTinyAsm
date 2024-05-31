@@ -59,24 +59,32 @@ def eval_param(obj, param: str):
     if match:
         return match.group(1)
 
-    # try to evaluate it as FreeCAD Expression
+    # if it starts with '=' try to evaluate it as FreeCAD Expression
     # .... looks good, and it even matches ...
     # <<strings>>
     # cell and object references
     # numbers and arithmetic expressions
+    match = re.search(r"=(.*)", ps )
+    if match:
+        try:
+            return obj.evalExpression( match.group(1) )
+
+        except:
+            return None
+
+    # try python to eval it:
     try:
-        result = obj.evalExpression( ps )
+        return eval(ps)
 
     except:
-        result = None
+        return None
 
-    return result
 
 
 def calc_list_eval(obj, p_list: list[str]):
     funcnam = p_list[0].strip()
     params = [ eval_param(obj, p) for p in p_list[1:] ]
-    print (params)
+    print (f"calling {funcnam} with: ", params)
 
 
 ##
