@@ -80,8 +80,12 @@ def eval_param(obj, param: str):
 
 def calc_list_eval(obj, p_list: list[str]):
     funcnam = p_list[0].strip()
-    params = [ eval_param(obj, p) for p in p_list[1:] ]
+    params = [ str(eval_param(obj, p)) for p in p_list[1:] ]
     print (f"calling {funcnam} with: ", params)
+    arglist = ', '.join(params)
+    evalstr= f"{funcnam}({arglist})"
+    print (evalstr)
+    # retval = eval(evalstr)
 
 
 ##
