@@ -55,6 +55,11 @@ class sheetSaxHandler(xml.sax.handler.ContentHandler):
         if content.strip() != "":
             print("CONTENT:", repr(content))
 
+class sheetSaxRecompAllCells(xml.sax.handler.ContentHandler):
+    def startElement(self, name, attrs):
+        print(f"BEGIN: <{name}>, {attrs.keys()}")
+        if name == 'Cell':
+            obj.recomputeCells(attrs.getValue('address'))
 
 # https://forum.freecad.org/viewtopic.php?p=182016#p182016
 class pySheetViewProvider:
@@ -106,11 +111,12 @@ class pySheet():
         # or able to attach parameterically to other objects
         # obj.addExtension('Part::AttachExtensionPython')
 
-    # def execute(self, obj):
-    #     """
-    #     Called on document recompute
-    #     """
-    #     pass
+    def execute(self, obj):
+        """
+        Called on document recompute
+        """
+        print('what shall I do to execute?')
+        xml.sax.parseString(obj.cells.Content, sheetSaxRecompAllCells())
 
     def onBeforeChange(proxy,obj,prop):
         print ("before change:", prop)
@@ -142,9 +148,8 @@ def create_pySheet(obj_name='pySheet', document=None):
     # return obj
 
 
-# document = App.ActiveDocument
-# if document is None:
-#     document = App.newDocument('Part Attachment Example')
-#
-# box = create_box('CustomBox', document)
-# document.recompute()
+document = App.ActiveDocument
+if document is None:
+    document = App.newDocument('Part Attachment Example')
+psh = create_pySheet('pySheetrecalc', document)
+document.recompute()
