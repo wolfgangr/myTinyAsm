@@ -46,7 +46,7 @@ def recompute_cells(obj):
         obj.recomputeCells(range_str)
 
 # evaluate parameters from def-List
-def eval_param(obj, param):
+def eval_param(obj, param: str):
     # remove leading / trailing  spaces
     ps = param.strip()
 
@@ -59,7 +59,7 @@ def eval_param(obj, param):
     if match:
         return match.group(1)
 
-    # can we evaluate it as an skd like ### obj.evalExpression('Part.Placement')
+    # try to evaluate it as FreeCAD Expression
     # .... looks good, and it even matches ...
     # <<strings>>
     # cell and object references
@@ -72,7 +72,12 @@ def eval_param(obj, param):
 
     return result
 
-## calc eval
+
+def calc_list_eval(obj, p_list: list[str]):
+    funcnam = p_list[0].strip()
+    params = [ eval_param(obj, p) for p in p_list[1:] ]
+    print (params)
+
 
 ##
 
