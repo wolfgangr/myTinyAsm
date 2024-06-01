@@ -5,7 +5,7 @@
 
 # import
 
-import dev.myTinyAsm.sheetPythonCustomFunc
+from dev.myTinyAsm.sheetPythonCustomFunc import *
 
 from dev.myTinyAsm.trianglesolver import solve
 from dev.myTinyAsm.sheetPyMods_base import *
