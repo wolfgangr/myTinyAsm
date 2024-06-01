@@ -69,7 +69,7 @@ def eval_param(obj, param: str):
             # lets figure out how to interface that to python
             # try 'tick' encapsulation ...
             #   spoils Placement, numbers....
-            # return "'" + evld + "'"
+            # return "'" + str(evld) + "'"
             return evld
         except:
             return None
@@ -86,12 +86,14 @@ def eval_param(obj, param: str):
 
 def calc_list_eval(obj, p_list: list[str]):
     funcnam = p_list[0].strip()
-    params = [ str(eval_param(obj, p)) for p in p_list[1:] ]
-    print (f"calling {funcnam} with: ", params)
-    arglist = ', '.join(params)
-    evalstr= f"{funcnam}({arglist})"
-    print (evalstr)
+    params = [ eval_param(obj, p) for p in p_list[1:] ]
+    print (f"calling {funcnam} with: ", str(params))
+    # arglist = ', '.join(params)
+    # evalstr= f"{funcnam}({arglist})"
+    # print (evalstr)
     # retval = eval(evalstr)
+    # https://stackoverflow.com/questions/21100203/passing-arguments-to-python-eval
+    eval(funcnam)(*params)
 
 
 ##
