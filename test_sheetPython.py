@@ -129,6 +129,7 @@ def update_res_fields(obj):
             ## perform calculation
             result = calc_list_eval(obj, deflist)
             print (f"to update Property Field {prop_res} with {result} of type {type(result)} ")
+            setattr(obj, prop_res, result)
 
 
     # remove stale result fields
