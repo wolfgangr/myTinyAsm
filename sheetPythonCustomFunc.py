@@ -264,24 +264,4 @@ def create_pySheet(obj_name='pySheet', document=None):
 
 ##
 # test generator
-
-# import dev.myTinyAsm.sheetPyMods_base
-from dev.myTinyAsm.sheetPyMods_base import *
-
-document = App.ActiveDocument
-if document is None:
-    document = App.newDocument('Part Attachment Example')
-    document.addObject('App::Part','Part')
-
-psh = create_pySheet('pySheetrecalc', document)
-
-testprop = CONST_DEF_prefix + '_test'
-psh.addProperty('App::PropertyStringList', testprop, CONST_DEF_prefix ,
-            'test data for custom python')
-setattr(psh, testprop, ['select_args', '2', '"foo"', "'bar'",
-        '=<<tralala>>', '=Part.Label', '=Part.Placement',
-        'noclue', '3', '7/8', '=8/9']
-    )
-
-
-document.recompute()
+# moved out
