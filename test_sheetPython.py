@@ -43,9 +43,9 @@ v1 = App.Vector(0.000000,0.000000,0)
 v2 = App.Vector(-2.002414,0.000000,0)
 v3 = App.Vector(-0.781895,0.980229,0)
 sketch.addGeometry(Part.LineSegment(v1, v2), False)
-sketch.addGeometry(Part.LineSegment(v2, v3), False)
 sketch.addGeometry(Part.LineSegment(v1, v3), False)
-
+sketch.addGeometry(Part.LineSegment(v3, v2), False)
+sketch.addConstraint(Sketcher.Constraint('Coincident',0,1,-1,1))
 
 ##
 
