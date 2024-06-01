@@ -19,6 +19,11 @@ CONST_MYBang = "'#!"
 CONST_DEF_prefix ="cpy_def"
 CONST_RES_prefix ="cpy_res"
 
+from dev.myTinyAsm.sheetPyMods_base import *
+from dev.myTinyAsm.trianglesolver import solve
+
+
+
 # for test case
 # from dev.myTinyAsm.sheetPyMods_base import *
 
