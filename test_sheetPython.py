@@ -130,6 +130,7 @@ def update_res_fields(obj):
             result = calc_list_eval(obj, deflist)
             print (f"to update Property Field {prop_res} with {result} of type {type(result)} ")
             setattr(obj, prop_res, result)
+            obj.touch()
 
 
     # remove stale result fields
@@ -227,6 +228,7 @@ class pySheet():
         """
         print('what shall I do to execute?')
         ## sync res fields
+        recompute_cells(obj)
         update_res_fields(obj)
         recompute_cells(obj)
 
