@@ -53,24 +53,30 @@ def eval_param(obj, param: str):
     # is it a string?
     match = re.search(r"^\'(.*)\'$", ps )
     if match:
-        return match.group(1)
+        # forward all with quote encapsulation
+        return ('"' + match.group(1) + '"')
 
     match = re.search(r"^\"(.*)\"$", ps )
     if match:
-        return match.group(1)
+        return ('"' + match.group(1) + '"')
 
     # '=...' try  FreeCAD Expression;  even matches ...
     #   <<strings>>, cell and object references,  numbers and arithmetic expressions
     match = re.search(r"=(.*)", ps )
     if match:
         try:
-            return obj.evalExpression( match.group(1) )
-
+            evld = obj.evalExpression( match.group(1) )
+            # lets figure out how to interface that to python
+            # try 'tick' encapsulation ...
+            #   spoils Placement, numbers....
+            # return "'" + evld + "'"
+            return evld
         except:
             return None
 
     # try python to eval it:
     try:
+        # no encapsulation
         return eval(ps)
 
     except:
