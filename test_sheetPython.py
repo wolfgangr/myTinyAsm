@@ -50,8 +50,33 @@ sketch.addConstraint(Sketcher.Constraint('PointOnObject',0,2,-1))
 sketch.addConstraint(Sketcher.Constraint('Coincident',1,1,0,1))
 sketch.addConstraint(Sketcher.Constraint('Coincident',2,1,1,2))
 sketch.addConstraint(Sketcher.Constraint('Coincident',2,2,0,2))
+
 sketch.addConstraint(Sketcher.Constraint('Angle',1,1,0,1,0.897480))
+sketch.setDatum(5,App.Units.Quantity('51.426000 deg'))
 sketch.renameConstraint(5, u'_C')
+
+sketch.addConstraint(Sketcher.Constraint('Distance',0,2.002414))
+sketch.setDatum(6,App.Units.Quantity('2.002000 mm'))
+sketch.renameConstraint(6, u'a')
+
+sketch.addConstraint(Sketcher.Constraint('Distance',1,1.253878))
+sketch.setDatum(7,App.Units.Quantity('1.254000 mm'))
+sketch.renameConstraint(7, u'b')
+
+sketch.addConstraint(Sketcher.Constraint('Distance',2,1.565187))
+sketch.renameConstraint(8, u'c')
+
+sketch.addConstraint(Sketcher.Constraint('Angle',2,1,1,2,1.567153))
+# sketch.setDatum(9,App.Units.Quantity('89.791000 deg'))
+sketch.renameConstraint(9, u'_A')
+
+sketch.addConstraint(Sketcher.Constraint('Angle',0,2,2,2,0.676887))
+sketch.renameConstraint(10, u'_B')
+
+
+
+
+
 ##
 
 
