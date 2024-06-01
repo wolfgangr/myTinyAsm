@@ -46,7 +46,12 @@ sketch.addGeometry(Part.LineSegment(v1, v2), False)
 sketch.addGeometry(Part.LineSegment(v1, v3), False)
 sketch.addGeometry(Part.LineSegment(v3, v2), False)
 sketch.addConstraint(Sketcher.Constraint('Coincident',0,1,-1,1))
-
+sketch.addConstraint(Sketcher.Constraint('PointOnObject',0,2,-1))
+sketch.addConstraint(Sketcher.Constraint('Coincident',1,1,0,1))
+sketch.addConstraint(Sketcher.Constraint('Coincident',2,1,1,2))
+sketch.addConstraint(Sketcher.Constraint('Coincident',2,2,0,2))
+sketch.addConstraint(Sketcher.Constraint('Angle',1,1,0,1,0.897480))
+sketch.renameConstraint(5, u'_C')
 ##
 
 
