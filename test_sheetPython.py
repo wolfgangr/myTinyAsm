@@ -19,6 +19,8 @@ CONST_MYBang = "'#!"
 CONST_DEF_prefix ="cpy_def"
 CONST_RES_prefix ="cpy_res"
 
+# for test case
+# from dev.myTinyAsm.sheetPyMods_base import *
 
 # check if propObj is 'cells' and if so, dump XML
 # otherwise return False
@@ -257,10 +259,16 @@ def create_pySheet(obj_name='pySheet', document=None):
 
     return obj
 
+##
+# test generator
+
+# import dev.myTinyAsm.sheetPyMods_base
+from dev.myTinyAsm.sheetPyMods_base import *
 
 document = App.ActiveDocument
 if document is None:
     document = App.newDocument('Part Attachment Example')
+    document.addObject('App::Part','Part')
 
 psh = create_pySheet('pySheetrecalc', document)
 
