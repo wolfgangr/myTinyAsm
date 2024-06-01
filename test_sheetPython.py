@@ -13,9 +13,9 @@ import Spreadsheet
 
 # from xml.sax.handler import ContentHandler
 # import xml.sax.handler
-# import xml.sax
+import xml.sax
 
-# CONST_MYBang = "'#!"
+CONST_MYBang = "'#!"
 CONST_DEF_prefix ="cpy_def"
 CONST_RES_prefix ="cpy_res"
 
