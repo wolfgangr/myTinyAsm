@@ -95,6 +95,7 @@ def calc_list_eval(obj, p_list: list[str]):
     # https://stackoverflow.com/questions/21100203/passing-arguments-to-python-eval
     rv = eval(funcnam)(*params)
     print(rv)
+    return rv
 
 
 ##
@@ -121,6 +122,9 @@ def update_res_fields(obj):
                 obj.touch()  # does this recurse??
 
             ## perform calculation
+            result = calc_list_eval(obj, deflist)
+            print (f"to update Property Field {prop_res} with {result} of type {type(result)} ")
+
 
     # remove stale result fields
         # cycle over result definitions properties
