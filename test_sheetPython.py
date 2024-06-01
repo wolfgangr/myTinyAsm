@@ -85,6 +85,9 @@ def eval_param(obj, param: str):
 
 
 def calc_list_eval(obj, p_list: list[str]):
+    if not p_list:
+        return None
+
     funcnam = p_list[0].strip()
     params = [ eval_param(obj, p) for p in p_list[1:] ]
     print (f"calling {funcnam} with: ", str(params))
