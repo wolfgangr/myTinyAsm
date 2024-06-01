@@ -93,7 +93,8 @@ def calc_list_eval(obj, p_list: list[str]):
     # print (evalstr)
     # retval = eval(evalstr)
     # https://stackoverflow.com/questions/21100203/passing-arguments-to-python-eval
-    eval(funcnam)(*params)
+    rv = eval(funcnam)(*params)
+    print(rv)
 
 
 ##
