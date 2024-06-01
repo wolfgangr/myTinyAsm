@@ -252,11 +252,22 @@ def create_pySheet(obj_name='pySheet', document=None):
     pySheet(obj)
     # obj.ViewObject.Proxy = 0  # Mandatory unless ViewProvider is coded
 
-    # return obj
+    return obj
 
 
 document = App.ActiveDocument
 if document is None:
     document = App.newDocument('Part Attachment Example')
+
 psh = create_pySheet('pySheetrecalc', document)
+
+testprop = CONST_DEF_prefix + '_test'
+psh.addProperty('App::PropertyStringList', testprop, CONST_DEF_prefix ,
+            'test data for custom python')
+setattr(psh, testprop, ['select_args', '2', '"foo"', "'bar'",
+        '=<<tralala>>', '=Part.Label', '=Part.Placement',
+        'noclue', '3', '7/8', '=8/9']
+    )
+
+
 document.recompute()
