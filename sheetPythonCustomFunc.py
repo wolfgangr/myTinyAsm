@@ -114,7 +114,11 @@ def calc_list_eval(obj, p_list: list[str]):
     # print (evalstr)
     # retval = eval(evalstr)
     # https://stackoverflow.com/questions/21100203/passing-arguments-to-python-eval
-    rv = eval(funcnam)(*params)
+    # rv = eval(funcnam)(*params)
+
+    # use evalidate instead to validate against malicious code
+    # see https://github.com/FreeCAD/FreeCAD/issues/14042#issuecomment-2143963786
+    rv = evalidate.Expr(funcnam, model=sPyMod_model).eval()(*params)
     print(rv)
     return rv
 
