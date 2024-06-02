@@ -106,7 +106,17 @@ for i in range(6):
     else:
         psh.set(f"C{i+2}",  f"= B{i+2} * 180° / pi")
 
+##
+# add config values for automagically 'evalidate'ing test custom modules
 
+# setattr(obj, CONST_CFG_prefix + '_dirs', ['', ':Macro', ':Mod', ':FCStd'])
+pfxdir =  CONST_CFG_prefix + '_dirs'
+dirlist = getattr(psh, pfxdir)
+dirlist.append(':Macro/dev/myTinyAsm')
+setattr(psh, dirlist)
+
+setattr(psh, CONST_CFG_prefix + '_files', ['trianglesolver.py', 'sheetPyMods_base.py'])
+setattr(psh, CONST_CFG_prefix + '_functions', ['select_args', 'solve'])
 
 ##
 
