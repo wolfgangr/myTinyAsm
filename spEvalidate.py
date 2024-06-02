@@ -7,4 +7,6 @@ import dev.evalidate.evalidate as evalidate
 
 # anything is forbidden if not explicitly allowed:
 # start by generic math formulae and test what is missing
-sPyMod_model = evalidate.mult_eval_model
+# sPyMod_model = evalidate.mult_eval_model.clone()
+sPyMod_model = evalidate.base_eval_model.clone()
+sPyMod_model.nodes.extend(['Mult', 'Call', 'Attribute'] )
