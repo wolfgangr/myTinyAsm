@@ -267,8 +267,8 @@ class pySheet():
         """
         # print('what shall I do to execute?')
         ## sync res fields
-        recompute_cells(obj)
-        update_res_fields(obj)
+        # recompute_cells(obj)
+        # update_res_fields(obj)
         recompute_cells(obj)
 
 
@@ -284,7 +284,15 @@ class pySheet():
         # debug_cells(obj, prop)
         # if prop == 'cells':
         #     xml.sax.parseString(obj.cells.Content, sheetSaxHandler())
-        pass
+        # CONST_DEF_prefix
+        match = re.match(f"^{CONST_DEF_prefix}_(.*)" , prop)
+        if match:
+            print ("changed:", prop)
+            recompute_cells(obj)
+            update_res_fields(obj)
+            recompute_cells(obj)
+
+        # pass
 
 def create_pySheet(obj_name='pySheet', document=None):
     """
