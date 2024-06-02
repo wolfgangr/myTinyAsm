@@ -109,7 +109,7 @@ def calc_list_eval(obj, p_list: list[str]):
 
     funcnam = p_list[0].strip()
     params = [ eval_param(obj, p) for p in p_list[1:] ]
-    print (f"calling {funcnam} with: ", str(params))
+    # print (f"calling {funcnam} with: ", str(params))
     # arglist = ', '.join(params)
     # evalstr= f"{funcnam}({arglist})"
     # print (evalstr)
@@ -127,7 +127,7 @@ def calc_list_eval(obj, p_list: list[str]):
     func_ptr = func_evd.eval()
     rv = func_ptr(*params)
 
-    print(rv)
+    # print(rv)
     return rv
 
 
@@ -140,13 +140,13 @@ def update_res_fields(obj):
         match = re.search(f'^{CONST_DEF_prefix}_(.*)', prop)
         if match:
             varname = match.group(1)
-            print (f"matched: {prop} -> {varname}")
+            # print (f"matched: {prop} -> {varname}")
             deflist = obj.getPropertyByName(prop)
             if deflist.__class__ is not list:
                 raise TypeError(f"prop must be of Type 'App::PropertyStringList' ")
             # find or create matching result property
             prop_res = f"{CONST_RES_prefix}_{varname}"
-            print (f"result:     -> {prop_res}")
+            # print (f"result:     -> {prop_res}")
             if prop_res not in obj.PropertiesList:
                 # obj.addProperty('App::PropertyPythonObject', 'cpy_res_dummy')
                 obj.addProperty('App::PropertyPythonObject', prop_res, CONST_RES_prefix,
@@ -156,7 +156,7 @@ def update_res_fields(obj):
 
             ## perform calculation
             result = calc_list_eval(obj, deflist)
-            print (f"to update Property Field {prop_res} with {result} of type {type(result)} ")
+            # print (f"to update Property Field {prop_res} with {result} of type {type(result)} ")
             setattr(obj, prop_res, result)
             obj.touch()
 
@@ -169,7 +169,7 @@ def update_res_fields(obj):
             varname = match.group(1)
             prop_def = f"{CONST_DEF_prefix}_{varname}"
             if not prop_def in obj.PropertiesList:
-                print(f"stale result property: {prop} - no matching def: {prop_def} - going to delete")
+                # print(f"stale result property: {prop} - no matching def: {prop_def} - going to delete")
                 obj.removeProperty(prop)
 
 class sheetSaxHandler(xml.sax.handler.ContentHandler):
@@ -273,13 +273,13 @@ class pySheet():
 
 
     def onBeforeChange(proxy,obj,prop):
-        print ("before change:", prop)
+        # print ("before change:", prop)
         # debug_cells(obj, prop)
         # if prop == 'cells':
         #     xml.sax.parseString(obj.cells.Content, sheetSaxHandler())
 
     def onChanged(proxy,obj,prop):
-        print ("changed:", prop)
+        # print ("changed:", prop)
         # debug_cells(obj, prop)
         # if prop == 'cells':
         #     xml.sax.parseString(obj.cells.Content, sheetSaxHandler())
