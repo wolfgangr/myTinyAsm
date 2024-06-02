@@ -113,7 +113,7 @@ for i in range(6):
 pfxdir =  CONST_CFG_prefix + '_dirs'
 dirlist = getattr(psh, pfxdir)
 dirlist.append(':Macro/dev/myTinyAsm')
-setattr(psh, dirlist)
+setattr(psh, pfxdir, dirlist)
 
 setattr(psh, CONST_CFG_prefix + '_files', ['trianglesolver.py', 'sheetPyMods_base.py'])
 setattr(psh, CONST_CFG_prefix + '_functions', ['select_args', 'solve'])
