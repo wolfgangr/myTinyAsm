@@ -26,6 +26,7 @@ import xml.sax
 CONST_MYBang = "'#!"
 CONST_DEF_prefix ="cpy_def"
 CONST_RES_prefix ="cpy_res"
+CONST_CFG_prefix ="cpy_cfg"
 
 from dev.myTinyAsm.sheetPyMods_base import *
 from dev.myTinyAsm.trianglesolver import solve
@@ -247,6 +248,17 @@ class pySheet():
 
         obj.addProperty('App::PropertyStringList', CONST_DEF_prefix + '_dummy', CONST_DEF_prefix ,
             'template for custom python function definition')
+
+        obj.addProperty('App::PropertyStringList', CONST_CFG_prefix + '_dirs', CONST_CFG_prefix ,
+            'file paths to search for, may start with /; .; ~; :Macro; :Mod; :FCStd')
+
+        setattr(obj, CONST_CFG_prefix + '_dirs', ['', ':Macro', ':Mod', ':FCStd'])
+
+        obj.addProperty('App::PropertyStringList', CONST_CFG_prefix + '_files', CONST_CFG_prefix ,
+            'module file names containing user supplied functions, usually *.py, may contain sub-path')
+
+        obj.addProperty('App::PropertyStringList', CONST_CFG_prefix + '_functions', CONST_CFG_prefix ,
+            'names of user defined functions allowed to be used')
 
 
     def execute(self, obj):
