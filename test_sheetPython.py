@@ -73,6 +73,9 @@ if document is None:
     document.addObject('App::Part','Part')
     add_test_sketch_triangle()
 
+# stop auto update during config setup
+document.RecomputesFrozen=True
+
 # create sheet
 psh = create_pySheet('pySheetrecalc', document)
 
@@ -120,6 +123,6 @@ setattr(psh, CONST_CFG_prefix + '_functions', ['select_args', 'solve'])
 
 ##
 
-
-
+# allow and perform a normal recompute
+document.RecomputesFrozen=False
 document.recompute()

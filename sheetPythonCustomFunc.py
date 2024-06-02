@@ -265,7 +265,7 @@ class pySheet():
         """
         Called on document recompute
         """
-        print('what shall I do to execute?')
+        # print('what shall I do to execute?')
         ## sync res fields
         recompute_cells(obj)
         update_res_fields(obj)
