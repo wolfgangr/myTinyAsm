@@ -15,6 +15,10 @@ import Spreadsheet
 # Safely evaluate an expression node or a string containing a Python literal or container display.
 from ast import literal_eval
 
+# from dev.myTinyAsm.spEvalidate import * # as spEvalidate
+from dev.myTinyAsm.spEvalidate import evalidate, sPyMod_model
+
+
 # from xml.sax.handler import ContentHandler
 # import xml.sax.handler
 import xml.sax
