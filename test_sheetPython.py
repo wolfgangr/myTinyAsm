@@ -76,7 +76,7 @@ if document is None:
 # create sheet
 psh = create_pySheet('pySheetrecalc', document)
 
-# add test property
+# add test property using select_args
 testprop = CONST_DEF_prefix + '_test'
 psh.addProperty('App::PropertyStringList', testprop, CONST_DEF_prefix ,
             'test data for custom python')
@@ -85,13 +85,25 @@ setattr(psh, testprop, ['select_args', '2', '"foo"', "'bar'",
         'noclue', '3', '7/8', '=8/9']
     )
 
+# add test property for triangle solver
+testprop = CONST_DEF_prefix + '_triangle'
+psh.addProperty('App::PropertyStringList', testprop, CONST_DEF_prefix ,
+            'test data for custom python')
+setattr(psh, testprop, ['solve', '=Sketch.Constraints.a/1mm', '=Sketch.Constraints.b/1mm', '', '', '', '=Sketch.Constraints._C / 180 ° * pi']
+    )
 
-
+# add cell content to display triangle solver results
 ##
 
-
-
-
+resref = '=cpy_res_triangle'
+psh.set('B1', resref)
+for i in range(6):
+    psh.set(f"A{i+2}", str(i))
+    psh.set(f"B{i+2}",  f"{resref}[A{i+2}]")
+    if i < 3:
+        psh.set(f"C{i+2}",  f"= B{i+2} * 1 mm")
+    else:
+        psh.set(f"C{i+2}",  f"= B{i+2} * 180° / pi")
 
 
 
