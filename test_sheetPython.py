@@ -73,9 +73,6 @@ if document is None:
     document.addObject('App::Part','Part')
     add_test_sketch_triangle()
 
-# stop auto update during config setup
-document.RecomputesFrozen=True
-
 # create sheet
 psh = create_pySheet('pySheetrecalc', document)
 
@@ -95,8 +92,11 @@ psh.addProperty('App::PropertyStringList', testprop, CONST_DEF_prefix ,
 setattr(psh, testprop, ['solve', '=Sketch.Constraints.a/1mm', '=Sketch.Constraints.b/1mm', '', '', '', '=Sketch.Constraints._C / 180 ° * pi']
     )
 
+
 # add cell content to display triangle solver results
-##
+# ensure creation of cpy_res_triangle Property to avoid error stakkato on startup
+psh.recompute()
+
 
 resref = '=cpy_res_triangle'
 psh.set('A1', '=Sketch.Label')  # dummy to set DAG relation to trigger recompute
@@ -109,7 +109,6 @@ for i in range(6):
     else:
         psh.set(f"C{i+2}",  f"= B{i+2} * 180° / pi")
 
-##
 # add config values for automagically 'evalidate'ing test custom modules
 
 # setattr(obj, CONST_CFG_prefix + '_dirs', ['', ':Macro', ':Mod', ':FCStd'])
@@ -121,8 +120,6 @@ setattr(psh, pfxdir, dirlist)
 setattr(psh, CONST_CFG_prefix + '_files', ['trianglesolver.py', 'sheetPyMods_base.py'])
 setattr(psh, CONST_CFG_prefix + '_functions', ['select_args', 'solve'])
 
-##
+## setup done
 
-# allow and perform a normal recompute
-document.RecomputesFrozen=False
 document.recompute()
