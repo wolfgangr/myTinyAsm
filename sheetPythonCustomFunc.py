@@ -116,14 +116,15 @@ def calc_list_eval(obj, p_list: list[str]):
     # https://stackoverflow.com/questions/21100203/passing-arguments-to-python-eval
 
     # rv = eval(funcnam)(*params)
-    myfunc = eval(funcnam)
-    rv = myfunc(*params)
+    # myfunc = eval(funcnam)
+    # rv = myfunc(*params)
 
     # use evalidate instead to validate against malicious code
     # see https://github.com/FreeCAD/FreeCAD/issues/14042#issuecomment-2143963786
     # rv = evalidate.Expr(funcnam, model=sPyMod_model).eval()(*params)
-    myfunc = evalidate.Expr(funcnam, model=sPyMod_model).eval()
-    rv = myfunc(*params)
+    func_evd = evalidate.Expr(funcnam, model=sPyMod_model)
+    func_ptr = func_evd.eval()
+    rv = func_ptr(*params)
 
     print(rv)
     return rv
