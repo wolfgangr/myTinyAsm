@@ -11,6 +11,10 @@ import re
 import datetime
 import Spreadsheet
 
+# https://docs.python.org/3.8/library/ast.html#ast.literal_eval
+# Safely evaluate an expression node or a string containing a Python literal or container display.
+from ast import literal_eval
+
 # from xml.sax.handler import ContentHandler
 # import xml.sax.handler
 import xml.sax
@@ -84,7 +88,10 @@ def eval_param(obj, param: str):
     # try python to eval it:
     try:
         # no encapsulation
-        return eval(ps)
+        # return eval(ps)
+        # secure ast.literal_eval
+        return literal_eval(ps)
+
 
     except:
         return None
@@ -240,15 +247,15 @@ class pySheet():
 
     def onBeforeChange(proxy,obj,prop):
         print ("before change:", prop)
-        debug_cells(obj, prop)
-        if prop == 'cells':
-            xml.sax.parseString(obj.cells.Content, sheetSaxHandler())
+        # debug_cells(obj, prop)
+        # if prop == 'cells':
+        #     xml.sax.parseString(obj.cells.Content, sheetSaxHandler())
 
     def onChanged(proxy,obj,prop):
         print ("changed:", prop)
-        debug_cells(obj, prop)
-        if prop == 'cells':
-            xml.sax.parseString(obj.cells.Content, sheetSaxHandler())
+        # debug_cells(obj, prop)
+        # if prop == 'cells':
+        #     xml.sax.parseString(obj.cells.Content, sheetSaxHandler())
 
 
 def create_pySheet(obj_name='pySheet', document=None):
