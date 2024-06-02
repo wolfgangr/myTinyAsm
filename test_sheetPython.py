@@ -96,6 +96,7 @@ setattr(psh, testprop, ['solve', '=Sketch.Constraints.a/1mm', '=Sketch.Constrain
 ##
 
 resref = '=cpy_res_triangle'
+psh.set('A1', '=Sketch.Label')  # dummy to set DAG relation to trigger recompute
 psh.set('B1', resref)
 for i in range(6):
     psh.set(f"A{i+2}", str(i))
