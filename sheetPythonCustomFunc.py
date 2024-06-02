@@ -277,13 +277,14 @@ class pySheet():
         # debug_cells(obj, prop)
         # if prop == 'cells':
         #     xml.sax.parseString(obj.cells.Content, sheetSaxHandler())
+        pass
 
     def onChanged(proxy,obj,prop):
         # print ("changed:", prop)
         # debug_cells(obj, prop)
         # if prop == 'cells':
         #     xml.sax.parseString(obj.cells.Content, sheetSaxHandler())
-
+        pass
 
 def create_pySheet(obj_name='pySheet', document=None):
     """
