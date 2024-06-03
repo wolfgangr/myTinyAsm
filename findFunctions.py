@@ -1,4 +1,6 @@
 import FreeCAD
+import re
+import os
 
 PATH_DICT={
 'Home':     FreeCAD.ConfigGet('UserHomePath') + '/',
@@ -6,11 +8,20 @@ PATH_DICT={
 'Macro':    FreeCAD.getUserMacroDir(True) + '/',
 'Mod':      FreeCAD.ConfigGet('UserAppData') + 'Mod/',
 'Config':   FreeCAD.ConfigGet('UserConfigPath'),
+'Cwd':      os.getcwd() + '/'
 }
 
 
-def expandPaths(obj, path_def_list):
-    pass
+def expandPaths(obj, propname):
+    pl_in = getattr(obj, propname)
+    pd = PATH_DICT # .copy()
+    docname = obj.Document.getFileName()
+    pd['FCStd'] = (os.path.dirname(docname) +'/') if docname else ''
+    print (pd)
+    print(pl_in)
+
+
+
 
 
 def findFuncs(dirs, files, funcs):
