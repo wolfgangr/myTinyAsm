@@ -2,6 +2,8 @@ import FreeCAD
 import re
 import os
 
+# pattern for path sanitizing - may be restricted for security policy
+# tbd: windows compat
 PATH_DICT={
 'Home':     FreeCAD.ConfigGet('UserHomePath') + '/',
 'Root':     '/',
@@ -17,8 +19,25 @@ def expandPaths(obj, propname):
     pd = PATH_DICT # .copy()
     docname = obj.Document.getFileName()
     pd['FCStd'] = (os.path.dirname(docname) +'/') if docname else ''
+
     print (pd)
     print(pl_in)
+
+    pl_out = []
+    for p in  pl_in:
+        match = re.match(r"^:([^/]*)((/([^/]+))*)/?$", p)
+        if match:
+            po = pd.get(match.group(1))
+            if match.group(2):
+                po = po.rstrip('/')
+                po += (match.group(2))
+                po += '/'
+
+            pl_out.append(po)
+
+    print  (pl_out)
+    return pl_out
+
 
 
 
