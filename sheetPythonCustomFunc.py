@@ -148,7 +148,8 @@ def perform_calculation(obj):
                 setattr(obj, prop_res, result)
 
             except:
-                print (f"cannot set {prop_res} - maybe still initializing...")
+                # print (f"cannot set {prop_res} - maybe still initializing...")
+                pass # silently ignore, not our business here
 
             obj.touch()
 ##
@@ -313,12 +314,17 @@ class pySheet():
         if re.match(f"^{CONST_prefix}.*" , prop): # prefilter since we are called quite often
             match = re.match(f"^{CONST_DEF_prefix}_(.*)" , prop)
             if match:
-                print ("changed:", prop)
+                # print ("changed:", prop)
                 recompute_cells(obj)
                 update_res_fields(obj)
                 recompute_cells(obj)
 
-        # pass
+            # CONST_CFG_prefix
+            match = re.match(f"^{CONST_CFG_prefix}_(.*)" , prop)
+            if match:
+                print ("changed:", prop)
+                print ("### TBD: ###: evaluate configuration")
+
 
 def create_pySheet(obj_name='pySheet', document=None):
     """
