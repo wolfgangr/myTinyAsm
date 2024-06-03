@@ -20,8 +20,8 @@ def expandPaths(obj, propname):
     docname = obj.Document.getFileName()
     pd['FCStd'] = (os.path.dirname(docname) +'/') if docname else ''
 
-    print (pd)
-    print(pl_in)
+    # print (pd)
+    # print(pl_in)
 
     pl_out = []
     for p in  pl_in:
@@ -35,10 +35,14 @@ def expandPaths(obj, propname):
 
             pl_out.append(po)
 
-    print  (pl_out)
+    # print  (pl_out)
     return pl_out
 
-
+# either bare 'name' or 'name.py' are accepted
+def strip_extension(filename):
+    match = re.match(r"^(\w+)(\.py)?$", filename)
+    if match:
+        return match.group(1)
 
 
 
