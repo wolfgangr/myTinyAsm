@@ -239,6 +239,13 @@ class pySheetViewProvider:
     def __setstate__(self, state):
         return None
 
+    # maybe this is what we need in 0.21.2 instead?
+    def dumps(self):
+        return None
+
+    def loads(self, state):
+        return None
+
     def onBeforeChange(proxy,obj,prop):
         print ("VP before change:", prop)
 
@@ -293,6 +300,14 @@ class pySheet():
     def __setstate__(self, state):
         return None
 
+    # maybe this is what we need in 0.21.2 instead?
+    def dumps(self):
+        return None
+
+    def loads(self, state):
+        return None
+
+
     def execute(self, obj):
         """
         Called on document recompute
@@ -300,7 +315,7 @@ class pySheet():
         # print('what shall I do to execute?')
         ## sync res fields
         recompute_cells(obj)
-        # update_res_fields(obj)
+        update_res_fields(obj)
         perform_calculation (obj)
         recompute_cells(obj)
 
@@ -321,7 +336,7 @@ class pySheet():
         if re.match(f"^{CONST_prefix}.*" , prop): # prefilter since we are called quite often
             match = re.match(f"^{CONST_DEF_prefix}_(.*)" , prop)
             if match:
-                # print ("changed:", prop)
+                print ("changed:", prop)
                 recompute_cells(obj)
                 update_res_fields(obj)
                 recompute_cells(obj)
