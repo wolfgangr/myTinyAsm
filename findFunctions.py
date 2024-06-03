@@ -1,3 +1,18 @@
+import FreeCAD
+
+PATH_DICT={
+'Home':     FreeCAD.ConfigGet('UserHomePath') + '/',
+'Root':     '/',
+'Macro':    FreeCAD.getUserMacroDir(True) + '/',
+'Mod':      FreeCAD.ConfigGet('UserAppData') + 'Mod/',
+'Config':   FreeCAD.ConfigGet('UserConfigPath'),
+}
+
+
+def expandPaths(obj, path_def_list):
+    pass
+
+
 def findFuncs(dirs, files, funcs):
 
     pass
