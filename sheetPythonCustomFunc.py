@@ -132,13 +132,14 @@ def calc_list_eval(obj, p_list: list[str]):
 
 
 ## perform calculation
-def perform_calculation (obj):
+def perform_calculation(obj):
     for prop in obj.PropertiesList:
         match = re.search(f'^{CONST_DEF_prefix}_(.*)', prop)
         if match:
-            # varname = match.group(1)
+            varname = match.group(1)
             # print (f"matched: {prop} -> {varname}")
             deflist = obj.getPropertyByName(prop)
+            prop_res = f"{CONST_RES_prefix}_{varname}"
             result = calc_list_eval(obj, deflist)
             # print (f"to update Property Field {prop_res} with {result} of type {type(result)} ")
             setattr(obj, prop_res, result)
