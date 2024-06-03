@@ -35,13 +35,17 @@ class sheetPyCEvalidator:
         rv = f_ptr(*params)
         return rv
 
-    def update_files(self):
+    def _update_files(self):
         # [ strip_extension(f) for f in getattr(obj, 'cpy_cfg_files', [])  ]
         self._file_list = [ findFunctions.strip_extension(f)
                     for f in getattr(self.sheet, self.files, [])  ]
 
-    def update_dirs(self):
+    def _update_dirs(self):
         self._path_list = findFunctions.expandPaths(self.sheet, self.dirs)
+
+    def update(self):
+        self._update_files()
+        self._update_dirs()
 
 
 
