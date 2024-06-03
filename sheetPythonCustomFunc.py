@@ -24,6 +24,8 @@ from dev.myTinyAsm.spEvalidate import evalidate, sPyMod_model
 import xml.sax
 
 CONST_MYBang = "'#!"
+
+CONST_prefix     ="cpy_"
 CONST_DEF_prefix ="cpy_def"
 CONST_RES_prefix ="cpy_res"
 CONST_CFG_prefix ="cpy_cfg"
@@ -308,12 +310,13 @@ class pySheet():
         # if prop == 'cells':
         #     xml.sax.parseString(obj.cells.Content, sheetSaxHandler())
         # CONST_DEF_prefix
-        match = re.match(f"^{CONST_DEF_prefix}_(.*)" , prop)
-        if match:
-            print ("changed:", prop)
-            recompute_cells(obj)
-            update_res_fields(obj)
-            recompute_cells(obj)
+        if re.match(f"^{CONST_prefix}.*" , prop): # prefilter since we are called quite often
+            match = re.match(f"^{CONST_DEF_prefix}_(.*)" , prop)
+            if match:
+                print ("changed:", prop)
+                recompute_cells(obj)
+                update_res_fields(obj)
+                recompute_cells(obj)
 
         # pass
 
