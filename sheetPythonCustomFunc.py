@@ -142,7 +142,12 @@ def perform_calculation(obj):
             prop_res = f"{CONST_RES_prefix}_{varname}"
             result = calc_list_eval(obj, deflist)
             # print (f"to update Property Field {prop_res} with {result} of type {type(result)} ")
-            setattr(obj, prop_res, result)
+            try:
+                setattr(obj, prop_res, result)
+
+            except:
+                print (f"cannot set {prop_res} - maybe still initializing...")
+
             obj.touch()
 ##
 
