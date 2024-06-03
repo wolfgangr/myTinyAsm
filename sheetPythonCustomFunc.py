@@ -131,6 +131,18 @@ def calc_list_eval(obj, p_list: list[str]):
     return rv
 
 
+## perform calculation
+def perform_calculation (obj):
+    for prop in obj.PropertiesList:
+        match = re.search(f'^{CONST_DEF_prefix}_(.*)', prop)
+        if match:
+            # varname = match.group(1)
+            # print (f"matched: {prop} -> {varname}")
+            deflist = obj.getPropertyByName(prop)
+            result = calc_list_eval(obj, deflist)
+            # print (f"to update Property Field {prop_res} with {result} of type {type(result)} ")
+            setattr(obj, prop_res, result)
+            obj.touch()
 ##
 
 
@@ -154,11 +166,13 @@ def update_res_fields(obj):
                 obj.setPropertyStatus(prop_res, 'ReadOnly')
                 obj.touch()  # does this recurse??
 
-            ## perform calculation
-            result = calc_list_eval(obj, deflist)
-            # print (f"to update Property Field {prop_res} with {result} of type {type(result)} ")
-            setattr(obj, prop_res, result)
-            obj.touch()
+            # anyway - may be our result has changed
+            perform_calculation (obj)
+            # ## perform calculation
+            # result = calc_list_eval(obj, deflist)
+            # # print (f"to update Property Field {prop_res} with {result} of type {type(result)} ")
+            # setattr(obj, prop_res, result)
+            # obj.touch()
 
 
     # remove stale result fields
@@ -171,6 +185,8 @@ def update_res_fields(obj):
             if not prop_def in obj.PropertiesList:
                 # print(f"stale result property: {prop} - no matching def: {prop_def} - going to delete")
                 obj.removeProperty(prop)
+
+
 
 class sheetSaxHandler(xml.sax.handler.ContentHandler):
 
@@ -267,8 +283,9 @@ class pySheet():
         """
         # print('what shall I do to execute?')
         ## sync res fields
-        # recompute_cells(obj)
+        recompute_cells(obj)
         # update_res_fields(obj)
+        perform_calculation (obj)
         recompute_cells(obj)
 
 
