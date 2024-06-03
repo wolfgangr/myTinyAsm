@@ -4,7 +4,7 @@
 # .../FreeCAD/Macro/dev$ git clone https://github.com/yaroslaff/evalidate.git
 
 import dev.evalidate.evalidate as evalidate
-import dev.myTinyAsm.findFunctions
+import dev.myTinyAsm.findFunctions as findFunctions
 
 # anything is forbidden if not explicitly allowed:
 # start by generic math formulae and test what is missing
@@ -37,7 +37,13 @@ class sheetPyCEvalidator:
 
     def update_files(self):
         # [ strip_extension(f) for f in getattr(obj, 'cpy_cfg_files', [])  ]
-        self._file_list = [ strip_extension(f) for f in getattr(obj, self.files, [])  ]
+        self._file_list = [ findFunctions.strip_extension(f)
+                    for f in getattr(self.sheet, self.files, [])  ]
+
+    def update_dirs(self):
+        self._path_list = findFunctions.expandPaths(self.sheet, self.dirs)
+
+
 
 
 
