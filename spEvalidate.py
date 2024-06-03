@@ -14,10 +14,36 @@ sPyMod_model.nodes.extend(['Mult', 'Call', 'Attribute'] )
 
 class sheetPyCEvalidator:
     """ implement evalidate and associated model for sheetPythonCustom """
-    def __init__(self, sheet):
+    # sheet = None
+    # model = None
+    def __init__(self, sheet=None, dirs='', files='', functions=''):
         self.sheet = sheet
         self.model = evalidate.base_eval_model.clone()
         self.model.nodes.extend(['Mult', 'Call', 'Attribute'] )
+        self.dirs      = dirs       # getattr(obj, dirs)
+        self.files     = files      # getattr(obj, files)
+        self.functions = functions  #(obj, functions)
+        # self.arglist=()
+
+
+    # func_evd = evalidate.Expr(funcnam, model=sPyMod_model)
+    # func_ptr = func_evd.eval()
+    # rv = func_ptr(*params)
+    def sPeval(self, funcnam, *params) :
+        f_evd = evalidate.Expr(funcnam, model = self.model)
+        f_ptr = f_evd.eval
+        rv = f_ptr(*params)
+        return rv
+
+    def update_files(self):
+        # [ strip_extension(f) for f in getattr(obj, 'cpy_cfg_files', [])  ]
+        self._file_list = [ strip_extension(f) for f in getattr(obj, self.files, [])  ]
+
+
+
+
+
+
 
 
 
