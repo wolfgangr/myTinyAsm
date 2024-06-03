@@ -315,7 +315,7 @@ class pySheet():
         # print('what shall I do to execute?')
         ## sync res fields
         recompute_cells(obj)
-        update_res_fields(obj)
+        # update_res_fields(obj)
         perform_calculation (obj)
         recompute_cells(obj)
 
