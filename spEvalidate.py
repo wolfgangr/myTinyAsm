@@ -6,6 +6,8 @@
 # import dev.evalidate.evalidate as evalidate
 # import dev.myTinyAsm.findFunctions as findFunctions
 import importlib
+import re
+# from FreeCAD import getUserMacroDir
 
 # anything is forbidden if not explicitly allowed:
 # start by generic math formulae and test what is missing
@@ -17,34 +19,67 @@ class sheetPyCEvalidator:
     """ implement evalidate and associated model for sheetPythonCustom """
     # sheet = None
     # model = None
-    def __init__(self, sheet=None, dirs='', files='', functions=''):
+    def __init__(self, sheet=None, prefix='', modules='', functions='', reimport=False):
         self.sheet = sheet
-        self.model = evalidate.base_eval_model.clone()
-        self.model.nodes.extend(['Mult', 'Call', 'Attribute'] )
-        self.dirs      = dirs       # getattr(obj, dirs)
-        self.files     = files      # getattr(obj, files)
-        self.functions = functions  #(obj, functions)
+        # self.model = evalidate.base_eval_model.clone()
+        # self.model.nodes.extend(['Mult', 'Call', 'Attribute'] )
+        self.prefix      = prefix       # getattr(obj, dirs)
+        self.modules     = modules      # getattr(obj, files)
+        self.functions   = functions  #(obj, functions)
 
-        # self.arglist=()
+        self.reimport    = reimport
+        self.ready = False
+
+        self.modlist = {}
+
+
 
 
     # func_evd = evalidate.Expr(funcnam, model=sPyMod_model)
     # func_ptr = func_evd.eval()
     # rv = func_ptr(*params)
+    ## TBD - de-evalidate
     def sPeval(self, funcnam, *params) :
         f_evd = evalidate.Expr(funcnam, model = self.model)
         f_ptr = f_evd.eval
         rv = f_ptr(*params)
         return rv
 
-    def _update_files(self):
-        # [ strip_extension(f) for f in getattr(obj, 'cpy_cfg_files', [])  ]
-        self._file_list = [ findFunctions.strip_extension(f)
-                    for f in getattr(self.sheet, self.files, [])  ]
+    # def _update_files(self):
+    #     # [ strip_extension(f) for f in getattr(obj, 'cpy_cfg_files', [])  ]
+    #     self._file_list = [ findFunctions.strip_extension(f)
+    #                 for f in getattr(self.sheet, self.files, [])  ]
+    #
+    # def _update_dirs(self):
+    #     self._path_list = [ p.rstrip('/') for p in
+    #             findFunctions.expandPaths(self.sheet, self.dirs) ]
 
-    def _update_dirs(self):
-        self._path_list = [ p.rstrip('/') for p in
-                findFunctions.expandPaths(self.sheet, self.dirs) ]
+    def _update_modlist(self):
+        # FreeCAD.getUserMacroDir(True)
+        ml = {}  # => import value as key
+
+        pref = getattr(self.sheet, self.prefix, '')
+        if pref:
+            if not re.match(r"^([\w_]+)(\.[\w_]+)*$", pref):
+                raise(ValueError, f"module prefix <{pref}> does not match foo.bar.pattern")
+        else:
+            pref= ''
+
+        mods = getattr(self.sheet, self.modules, [])
+        for m in mods:
+            if not re.match(r"^([\w_]+)(\.[\w_]+)*$", m):
+                print(f"module name <{m}> does not match foo.bar.pattern - ignored")
+            else:
+                ml['m']= (pref + '.' + m) if pref else m
+
+        if (not ml) and pref:  # i.e. no valid modules defined
+            ml['pref'] = pref
+
+        if ml:
+            self.modlist = ml
+
+
+
 
     def _update_funcs(self):
 
@@ -76,10 +111,17 @@ class sheetPyCEvalidator:
 
         self.model.imported_functions = self._func_dict
 
+    ##
+    def touched(self):
+        self.reimport = True
 
     def update(self):
-        self._update_files()
-        self._update_dirs()
+        if self.reimport:
+            self._update_modlist()
+            self._update_funcs()
+            self.reimport = False
+
+        # self._update_funcs()
 
 
 
