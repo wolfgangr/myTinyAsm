@@ -237,24 +237,24 @@ class pySheetViewProvider:
         # obj.Proxy = self
         self.Object = obj
 
-    def __getstate__(self):
-        return None
-
-    def __setstate__(self, state):
-        return None
+    # def __getstate__(self):
+    #     return None
+    #
+    # def __setstate__(self, state):
+    #     return None
 
     # maybe this is what we need in 0.21.2 instead?
-    def dumps(self):
-        return None
-
-    def loads(self, state):
-        return None
-
-    def onBeforeChange(proxy,obj,prop):
-        print ("VP before change:", prop)
-
-    def onChanged(proxy,obj,prop):
-        print ("VP changed:", prop)
+    # def dumps(self):
+    #     return None
+    #
+    # def loads(self, state):
+    #     return None
+    #
+    # def onBeforeChange(proxy,obj,prop):
+    #     print ("VP before change:", prop)
+    #
+    # def onChanged(proxy,obj,prop):
+    #     print ("VP changed:", prop)
 
 class pySheet():
     """
@@ -296,20 +296,23 @@ class pySheet():
         obj.addProperty('App::PropertyStringList', CONST_CFG_prefix + '_functions', CONST_CFG_prefix ,
             'names of user defined functions configured to be available')
 
+        obj.addProperty('App::PropertyBool', CONST_CFG_prefix + '_reimport', CONST_CFG_prefix ,
+            'set to true to reimport modules after code change')
+
     # https://forum.freecad.org/viewtopic.php?p=346763&sid=d7e3d832b5e934914fcdccc5bdc100d5#p346763
     # does this help against "not json serializable" ?
-    def __getstate__(self):
-        return None
-
-    def __setstate__(self, state):
-        return None
-
-    # maybe this is what we need in 0.21.2 instead?
-    def dumps(self):
-        return None
-
-    def loads(self, state):
-        return None
+    # def __getstate__(self):
+    #     return None
+    #
+    # def __setstate__(self, state):
+    #     return None
+    #
+    # # maybe this is what we need in 0.21.2 instead?
+    # def dumps(self):
+    #     return None
+    #
+    # def loads(self, state):
+    #     return None
 
 
     def execute(self, obj):
