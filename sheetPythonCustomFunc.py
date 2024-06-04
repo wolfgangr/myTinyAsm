@@ -285,16 +285,16 @@ class pySheet():
         obj.addProperty('App::PropertyStringList', CONST_DEF_prefix + '_dummy', CONST_DEF_prefix ,
             'template for custom python function definition')
 
-        obj.addProperty('App::PropertyStringList', CONST_CFG_prefix + '_dirs', CONST_CFG_prefix ,
-            'file paths to search for, may start with /; .; ~; :Macro; :Mod; :FCStd')
+        obj.addProperty('App::PropertyString', CONST_CFG_prefix + '_prefix', CONST_CFG_prefix ,
+            'common module path from FreeCAD-Macro-Dir, in foo.bar.format ')
 
-        setattr(obj, CONST_CFG_prefix + '_dirs', ['', ':Macro', ':Mod', ':FCStd'])
+        # setattr(obj, CONST_CFG_prefix + '_dirs', ['', ':Macro', ':Mod', ':FCStd'])
 
-        obj.addProperty('App::PropertyStringList', CONST_CFG_prefix + '_files', CONST_CFG_prefix ,
-            'module file names containing user supplied functions, usually *.py, may contain sub-path')
+        obj.addProperty('App::PropertyStringList', CONST_CFG_prefix + '_modules', CONST_CFG_prefix ,
+            'list of module paths from FreeCAD-Macro-Dir/foo/bar/prefix, in foo.bar.prefix format ')
 
         obj.addProperty('App::PropertyStringList', CONST_CFG_prefix + '_functions', CONST_CFG_prefix ,
-            'names of user defined functions allowed to be used')
+            'names of user defined functions configured to be available')
 
     # https://forum.freecad.org/viewtopic.php?p=346763&sid=d7e3d832b5e934914fcdccc5bdc100d5#p346763
     # does this help against "not json serializable" ?

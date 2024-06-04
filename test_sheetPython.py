@@ -112,12 +112,14 @@ for i in range(6):
 # add config values for automagically 'evalidate'ing test custom modules
 
 # setattr(obj, CONST_CFG_prefix + '_dirs', ['', ':Macro', ':Mod', ':FCStd'])
-pfxdir =  CONST_CFG_prefix + '_dirs'
-dirlist = getattr(psh, pfxdir)
-dirlist.append(':Macro/dev/myTinyAsm')
-setattr(psh, pfxdir, dirlist)
+# pfxdir =  CONST_CFG_prefix + '_dirs'
+# dirlist = getattr(psh, pfxdir)
+# dirlist.append(':Macro/dev/myTinyAsm')
+# setattr(psh, pfxdir, dirlist)
 
-setattr(psh, CONST_CFG_prefix + '_files', ['trianglesolver.py', 'sheetPyMods_base.py'])
+# setattr(psh, CONST_CFG_prefix + '_files', ['trianglesolver.py', 'sheetPyMods_base.py'])
+setattr(psh, CONST_CFG_prefix + '_prefix',     'dev.myTinyAsm')
+setattr(psh, CONST_CFG_prefix + '_modules',   ['trianglesolver', 'sheetPyMods_base'])
 setattr(psh, CONST_CFG_prefix + '_functions', ['select_args', 'solve'])
 
 ## setup done
