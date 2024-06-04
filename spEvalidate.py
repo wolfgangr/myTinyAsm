@@ -1,30 +1,17 @@
-# sanity checking of user provided code
-# see https://github.com/yaroslaff/evalidate/
-# assume it lives beneath ourselves in Macro/dev
-# .../FreeCAD/Macro/dev$ git clone https://github.com/yaroslaff/evalidate.git
-
-# import dev.evalidate.evalidate as evalidate
 # import dev.myTinyAsm.findFunctions as findFunctions
+# inspired by evalidate, but finally implemented without
+
 import importlib
 import re
-# from FreeCAD import getUserMacroDir
+import sys
 
-# anything is forbidden if not explicitly allowed:
-# start by generic math formulae and test what is missing
-# sPyMod_model = evalidate.mult_eval_model.clone()
-# sPyMod_model = evalidate.base_eval_model.clone()
-# sPyMod_model.nodes.extend(['Mult', 'Call', 'Attribute'] )
 
 class sheetPyCEvalidator:
     """ implement evalidate and associated model for sheetPythonCustom """
-    # sheet = None
-    # model = None
     def __init__(self, sheet=None,
             prefix='', modules='', functions='', reimport=''):
 
         self.sheet = sheet
-        # self.model = evalidate.base_eval_model.clone()
-        # self.model.nodes.extend(['Mult', 'Call', 'Attribute'] )
         self.prefix      = prefix       # getattr(obj, dirs)
         self.modules     = modules      # getattr(obj, files)
         self.functions   = functions    #(obj, functions)
@@ -32,7 +19,8 @@ class sheetPyCEvalidator:
 
         self.ready = False
 
-        self.modlist = {}
+        self.modlist  = {}
+        self.funclist = {}
 
 
 
@@ -46,15 +34,6 @@ class sheetPyCEvalidator:
         f_ptr = f_evd.eval
         rv = f_ptr(*params)
         return rv
-
-    # def _update_files(self):
-    #     # [ strip_extension(f) for f in getattr(obj, 'cpy_cfg_files', [])  ]
-    #     self._file_list = [ findFunctions.strip_extension(f)
-    #                 for f in getattr(self.sheet, self.files, [])  ]
-    #
-    # def _update_dirs(self):
-    #     self._path_list = [ p.rstrip('/') for p in
-    #             findFunctions.expandPaths(self.sheet, self.dirs) ]
 
     def _update_modlist(self):
         # FreeCAD.getUserMacroDir(True)
@@ -81,10 +60,37 @@ class sheetPyCEvalidator:
             self.modlist = ml
 
 
-
-
     def _update_funcs(self):
 
+        fl = {}
+        for key, value in self.modlist.items():
+            # => import value as key
+            mod = sys.modules.get(key)
+            if mod:                     # already imported
+                importlib.reload(mod)
+            else:                       #  yet unknown
+                try:
+                    import value as key
+                    mod = sys.modules.get(key)
+                except:
+                    print(f"failed to:  import {value} as {key} ")
+
+            if mod:
+                 mod.__dict__.keys()
+                 # filter out 'dunders' to get function candidates
+                 # for fc in mod.__dict__.keys() if not re.match(r"^__[\w]+__$", k) :
+                 for fcname, fcval in mod.__dict__.items():
+                    # ignore __dunder__
+                    if  re.match(r"^__[\w]+__$", fcname):
+                        continue
+
+                    if callable(fcval):
+                        fl[fcname] = fcval
+            if fl:
+                self.funclist = fl
+
+
+## ========================0~~~~~~~~~~~~~~~~~~~~~~~~~--------------------
         # self.locals_before = locals() # for debugging
 
         # sp_bck = sys.path
