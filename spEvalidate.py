@@ -5,6 +5,7 @@
 
 import dev.evalidate.evalidate as evalidate
 import dev.myTinyAsm.findFunctions as findFunctions
+import importlib
 
 # anything is forbidden if not explicitly allowed:
 # start by generic math formulae and test what is missing
@@ -41,7 +42,29 @@ class sheetPyCEvalidator:
                     for f in getattr(self.sheet, self.files, [])  ]
 
     def _update_dirs(self):
-        self._path_list = findFunctions.expandPaths(self.sheet, self.dirs)
+        self._path_list = [ p.rstrip('/') for p in
+                findFunctions.expandPaths(self.sheet, self.dirs) ]
+
+    def _update_funcs(self):
+
+        sp_bck = sys.path
+        sys.path = self._path_list
+
+        for tg in self._file_list:
+            try:
+                module = importlib.import_module(tg)
+            except:
+                print(f"failed to import {tg}")
+
+        sys.path = sp_bck
+
+        self._func_dict={}
+        for func in getattr(self.sheet, self.functions, []) :
+            if re.match(r"^[\w.]+$", func):
+                self._func_dict[func] = eval(func)
+
+        self.model.imported_functions = self._func_dict
+
 
     def update(self):
         self._update_files()
