@@ -35,7 +35,7 @@ class sheetPyCEvalidator:
         rv = f_ptr(*params)
         return rv
 
-    def _update_modlist(self):
+    def _update_modList(self):
         # FreeCAD.getUserMacroDir(True)
         ml = {}  # => import value as key
 
@@ -60,7 +60,7 @@ class sheetPyCEvalidator:
             self.modlist = ml
 
 
-    def _update_funcs(self):
+    def _update_funcList(self):
 
         fl = {}
         for key, value in self.modlist.items():
@@ -87,37 +87,38 @@ class sheetPyCEvalidator:
                     if callable(fcval):
                         fl[fcname] = fcval
             if fl:
+                ## tbd: filter for selected functions
                 self.funclist = fl
 
 
 ## ========================0~~~~~~~~~~~~~~~~~~~~~~~~~--------------------
-        # self.locals_before = locals() # for debugging
-
-        # sp_bck = sys.path
-        # sys.path = self._path_list
-
-        for tg in self._file_list:
-            # try:
-                module = importlib.import_module(tg)
-                importlib.reload(module)
-            # except:
-            #    print(f"failed to import {tg}")
-
-        # sys.path = sp_bck
-
-        # print (locals())
-        # self.locals = locals()
-        # self.locals_after = locals() # for debugging
-
-        self._func_dict={}
-        for func in getattr(self.sheet, self.functions, []) :
-            if re.match(r"^[\w.]+$", func):
-                # self._func_dict[func] = eval(func)
-                # self._func_dict[func] = locals().get(func)
-                self._func_dict[func] = globals().get(func)
-
-
-        self.model.imported_functions = self._func_dict
+        # # # self.locals_before = locals() # for debugging
+        # #
+        # # # sp_bck = sys.path
+        # # # sys.path = self._path_list
+        # #
+        # # for tg in self._file_list:
+        # #     # try:
+        # #         module = importlib.import_module(tg)
+        # #         importlib.reload(module)
+        # #     # except:
+        # #     #    print(f"failed to import {tg}")
+        # #
+        # # # sys.path = sp_bck
+        # #
+        # # # print (locals())
+        # # # self.locals = locals()
+        # # # self.locals_after = locals() # for debugging
+        # #
+        # # self._func_dict={}
+        # # for func in getattr(self.sheet, self.functions, []) :
+        # #     if re.match(r"^[\w.]+$", func):
+        # #         # self._func_dict[func] = eval(func)
+        # #         # self._func_dict[func] = locals().get(func)
+        # #         self._func_dict[func] = globals().get(func)
+        # #
+        # #
+        # # self.model.imported_functions = self._func_dict
 
     ##
     def touched(self):
