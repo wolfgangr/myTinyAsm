@@ -19,7 +19,9 @@ class sheetPyCEvalidator:
     """ implement evalidate and associated model for sheetPythonCustom """
     # sheet = None
     # model = None
-    def __init__(self, sheet=None, prefix='', modules='', functions='', reimport=False):
+    def __init__(self, sheet=None,
+            prefix='', modules='', functions='', reimport=''):
+
         self.sheet = sheet
         # self.model = evalidate.base_eval_model.clone()
         # self.model.nodes.extend(['Mult', 'Call', 'Attribute'] )
@@ -70,10 +72,10 @@ class sheetPyCEvalidator:
             if not re.match(r"^([\w_]+)(\.[\w_]+)*$", m):
                 print(f"module name <{m}> does not match foo.bar.pattern - ignored")
             else:
-                ml['m']= (pref + '.' + m) if pref else m
+                ml[m]= (pref + '.' + m) if pref else m
 
         if (not ml) and pref:  # i.e. no valid modules defined
-            ml['pref'] = pref
+            ml[pref] = pref
 
         if ml:
             self.modlist = ml
