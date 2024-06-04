@@ -63,7 +63,7 @@ class sheetPyCEvalidator:
         pref = getattr(self.sheet, self.prefix, '')
         if pref:
             if not re.match(r"^([\w_]+)(\.[\w_]+)*$", pref):
-                raise(ValueError, f"module prefix <{pref}> does not match foo.bar.pattern")
+                raise ValueError(f"module prefix <{pref}> does not match foo.bar.pattern")
         else:
             pref= ''
 
