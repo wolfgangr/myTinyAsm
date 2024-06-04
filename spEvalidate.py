@@ -27,9 +27,9 @@ class sheetPyCEvalidator:
         # self.model.nodes.extend(['Mult', 'Call', 'Attribute'] )
         self.prefix      = prefix       # getattr(obj, dirs)
         self.modules     = modules      # getattr(obj, files)
-        self.functions   = functions  #(obj, functions)
+        self.functions   = functions    #(obj, functions)
+        self.reimport    = reimport     # the property name
 
-        self.reimport    = reimport
         self.ready = False
 
         self.modlist = {}
@@ -115,7 +115,15 @@ class sheetPyCEvalidator:
 
     ##
     def touched(self):
-        self.reimport = True
+        self._set_reimport(False)
+
+    def _set_reimport(self, bl = False):
+        setattr(self.sheet, self.reimport, bl)
+
+    def _get_reimport(self):
+        return bool( getattr(self.sheet, self.reimport, False))
+
+
 
     def update(self):
         if self.reimport:
