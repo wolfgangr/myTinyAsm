@@ -24,6 +24,7 @@ class sheetPyCEvalidator:
         self.dirs      = dirs       # getattr(obj, dirs)
         self.files     = files      # getattr(obj, files)
         self.functions = functions  #(obj, functions)
+
         # self.arglist=()
 
 
@@ -47,21 +48,31 @@ class sheetPyCEvalidator:
 
     def _update_funcs(self):
 
-        sp_bck = sys.path
-        sys.path = self._path_list
+        # self.locals_before = locals() # for debugging
+
+        # sp_bck = sys.path
+        # sys.path = self._path_list
 
         for tg in self._file_list:
-            try:
+            # try:
                 module = importlib.import_module(tg)
-            except:
-                print(f"failed to import {tg}")
+                importlib.reload(module)
+            # except:
+            #    print(f"failed to import {tg}")
 
-        sys.path = sp_bck
+        # sys.path = sp_bck
+
+        # print (locals())
+        # self.locals = locals()
+        # self.locals_after = locals() # for debugging
 
         self._func_dict={}
         for func in getattr(self.sheet, self.functions, []) :
             if re.match(r"^[\w.]+$", func):
-                self._func_dict[func] = eval(func)
+                # self._func_dict[func] = eval(func)
+                # self._func_dict[func] = locals().get(func)
+                self._func_dict[func] = globals().get(func)
+
 
         self.model.imported_functions = self._func_dict
 

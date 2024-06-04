@@ -172,7 +172,11 @@ def update_res_fields(obj):
                 # obj.addProperty('App::PropertyPythonObject', 'cpy_res_dummy')
                 obj.addProperty('App::PropertyPythonObject', prop_res, CONST_RES_prefix,
                     f"result property for {prop}")
-                obj.setPropertyStatus(prop_res, 'ReadOnly')
+                #https://wiki.freecad.org/Property_editor#Actions
+                # https://freecad.github.io/SourceDoc/d0/da9/classApp_1_1Property.html
+                # ['ReadOnly', 'Transient', 'Output', 14, 21]
+                # obj.setPropertyStatus(prop_res, 'ReadOnly')
+                obj.setPropertyStatus(prop_res, ['ReadOnly', 'Transient', 'Output', 14, 21])
                 obj.touch()  # does this recurse??
 
             # anyway - may be our result has changed
