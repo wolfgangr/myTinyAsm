@@ -7,12 +7,13 @@
 
 from dev.myTinyAsm.sheetPythonCustomFunc import *
 
+## TBD #### test config for accessible modules
 from dev.myTinyAsm.trianglesolver import solve
 from dev.myTinyAsm.sheetPyMods_base import *
 
 # add allowd functions
-sPyMod_model.imported_functions['select_args']=select_args
-sPyMod_model.imported_functions['solve']=solve
+# sPyMod_model.imported_functions['select_args']=select_args
+# sPyMod_model.imported_functions['solve']=solve
 
 
 ##
