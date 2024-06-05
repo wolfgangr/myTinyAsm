@@ -126,7 +126,7 @@ class sheetPyCEvalidator:
     def make_ready(self):
         if self.ready:
             return True
-        _update(self)
+        self._update()
         if self.ready:
             return True
         else:
