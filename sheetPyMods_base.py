@@ -26,6 +26,6 @@ def real_global_placement(link: str, subobj:str):
     print(plc)
     return plc
 
-def noop():
+def tuMirEchtNix():
     pass
 
