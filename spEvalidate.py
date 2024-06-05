@@ -1,5 +1,37 @@
-# import dev.myTinyAsm.findFunctions as findFunctions
+# (c) Wolfgang Rosner 2024 - wolfagngr@github.com
+# License: LGPL 2+
+# https://github.com/wolfgangr/myTinyAsm/blob/master/spEvalidate.py
+#
 # inspired by evalidate, but finally implemented without
+#   see https://github.com/yaroslaff/evalidate
+
+"""restricted eval implementation for spreadsheet user defined functions
+
+Security considerations:
+- implement FreeCAD Policy 'separate Code from Data'
+- targets security level as of existing FreeCAD macros
+- code for user defined functions is stored as whatever.py modules in the FreeCAD Macro tree
+- SheetPython-objects contains configuration and parameter bindings only
+  stored in objects Property variables
+  ### TBD: documentation
+- parameters are sanitized in the caller, allowing only
+  - strings, passed in verbatim w/o any 'eval'
+  - FreeCAD Expressions, parsed by obj.evalExpression
+  - bare Python literals, parsed by ast.literal_eval
+- function names are parsed here
+  - containing only alphanumericals and _
+  - defined in a defined subset of the FreeCAD Macro directory
+  - matching a user defined list
+- the caller interface 'sPeval' only implements
+  function(arg1 , .... argn) syntax
+  thus mimicing the limited 'node' of evalidate
+  and blocking malicious code injection from Data space (FCStd) to Code space
+
+There is no 'sandbox type' restriction of what the code living in the Macro Directory can do,
+as this is open in all over FreeCAD anyway.
+
+"""
+
 
 import importlib
 import re
@@ -23,12 +55,7 @@ class sheetPyCEvalidator:
         self.funclist = {}
         self.accsFlist = {}
 
-
-
-    # func_evd = evalidate.Expr(funcnam, model=sPyMod_model)
-    # func_ptr = func_evd.eval()
-    # rv = func_ptr(*params)
-    ## TBD - de-evalidate
+    # caller interface to substitute open 'eval'
     def sPeval(self, funcnam, *params) :
 
         self.make_ready() # ensure that our machinery is up to date
@@ -40,7 +67,7 @@ class sheetPyCEvalidator:
         else:
             return None
 
-
+    # parse, sanitize and aggregate user module selection in subset of Macro Path
     def _update_modList(self):
         # FreeCAD.getUserMacroDir(True)
         ml = {}  # => import value as key
@@ -65,7 +92,7 @@ class sheetPyCEvalidator:
         if ml:
             self.modlist = ml
 
-
+    # import user defined modules and get available functions
     def _update_funcList(self):
 
         fl = {}
@@ -80,9 +107,6 @@ class sheetPyCEvalidator:
             else:                       #  if still unknown
                 try:
                     # import value as key
-                    # https://stackoverflow.com/questions/10675054/how-to-import-a-module-in-python-with-importlib-import-module#10675081
-                    # mod = importlib.import_module('.'+key ,  __name__)
-                    # mod = sys.modules.get(key)
                     mod = importlib.import_module(value)
                     globals()[key] = mod
                 except:
@@ -90,9 +114,8 @@ class sheetPyCEvalidator:
 
             if mod:
                 mod.__dict__.keys()
-                # filter out 'dunders' to get function candidates
+                # filter out '__dunders__' to get function candidates
                 for fcname, fcval in mod.__dict__.items():
-                    # ignore __dunder__
                     if  re.match(r"^__[\w]+__$", fcname):
                         continue
 
@@ -108,7 +131,8 @@ class sheetPyCEvalidator:
                     if fname in self.sheet.cpy_cfg_functions
                 }
 
-    ##
+    ## manage update workflow
+
     def touched(self):
         self._set_reimport(False)
 
