@@ -15,13 +15,9 @@ import Spreadsheet
 # Safely evaluate an expression node or a string containing a Python literal or container display.
 from ast import literal_eval
 
+# my own sanitized function eval
 import dev.myTinyAsm.spEvalidate as spEvalidate
-# from dev.myTinyAsm.spEvalidate import evalidate, sPyMod_model
-# from dev.myTinyAsm.spEvalidate import sPyMod_model
 
-
-# from xml.sax.handler import ContentHandler
-# import xml.sax.handler
 import xml.sax
 
 CONST_MYBang = "'#!"
@@ -35,27 +31,23 @@ from dev.myTinyAsm.sheetPyMods_base import *
 from dev.myTinyAsm.trianglesolver import solve
 
 
-
-# for test case
-# from dev.myTinyAsm.sheetPyMods_base import *
-
 # check if propObj is 'cells' and if so, dump XML
 # otherwise return False
 #
-def debug_cells(obj, prop):
-
-    if prop != 'cells':
-        return False
-
-    propObj = getattr(obj, 'cells')
-    #
-    # if not hasattr(propObj, 'TypeId'):
-    #     return False
-    #
-    # if not (str(propObj.TypeId) == 'Spreadsheet::PropertySheet'):
-    #     return False
-    print (propObj.Content)
-    return True # propObj.Content
+# def debug_cells(obj, prop):
+#
+#     if prop != 'cells':
+#         return False
+#
+#     propObj = getattr(obj, 'cells')
+#     #
+#     # if not hasattr(propObj, 'TypeId'):
+#     #     return False
+#     #
+#     # if not (str(propObj.TypeId) == 'Spreadsheet::PropertySheet'):
+#     #     return False
+#     print (propObj.Content)
+#     return True # propObj.Content
 
 # required if we overload execute()
 def recompute_cells(obj):
@@ -85,26 +77,17 @@ def eval_param(obj, param: str):
     if match:
         try:
             evld = obj.evalExpression( match.group(1) )
-            # lets figure out how to interface that to python
-            # try 'tick' encapsulation ...
-            #   spoils Placement, numbers....
-            # return "'" + str(evld) + "'"
             return evld
         except:
             return None
 
-    # try python to eval it:
+    # try secure ast.literal_eval for python literals
     try:
-        # no encapsulation
-        # return eval(ps)
-        # secure ast.literal_eval
         return literal_eval(ps)
 
 
     except:
         return None
-
-
 
 def calc_list_eval(obj, p_list: list[str]):
     if not p_list:
@@ -113,28 +96,9 @@ def calc_list_eval(obj, p_list: list[str]):
     funcnam = p_list[0].strip()
     params = [ eval_param(obj, p) for p in p_list[1:] ]
     # print (f"calling {funcnam} with: ", str(params))
-    # arglist = ', '.join(params)
-    # evalstr= f"{funcnam}({arglist})"
-    # print (evalstr)
-    # retval = eval(evalstr)
-    # https://stackoverflow.com/questions/21100203/passing-arguments-to-python-eval
 
-    # rv = eval(funcnam)(*params)
-    # myfunc = eval(funcnam)
-    # rv = myfunc(*params)
-
-    # sPeval(self, funcnam, *params) :
+    # sanitized evalutaion of funcnam
     rv = obj.Proxy.spEvalidator.sPeval(funcnam, *params)
-
-
-    # use evalidate instead to validate against malicious code
-    # see https://github.com/FreeCAD/FreeCAD/issues/14042#issuecomment-2143963786
-    # rv = evalidate.Expr(funcnam, model=sPyMod_model).eval()(*params)
-    ##
-    # func_evd = evalidate.Expr(funcnam, model=sPyMod_model)
-    # func_ptr = func_evd.eval()
-    # rv = func_ptr(*params)
-
     # print(rv)
     return rv
 
@@ -175,28 +139,20 @@ def update_res_fields(obj):
             prop_res = f"{CONST_RES_prefix}_{varname}"
             # print (f"result:     -> {prop_res}")
             if prop_res not in obj.PropertiesList:
-                # obj.addProperty('App::PropertyPythonObject', 'cpy_res_dummy')
                 obj.addProperty('App::PropertyPythonObject', prop_res, CONST_RES_prefix,
                     f"result property for {prop}")
-                #https://wiki.freecad.org/Property_editor#Actions
+                # https://wiki.freecad.org/Property_editor#Actions
                 # https://freecad.github.io/SourceDoc/d0/da9/classApp_1_1Property.html
                 # ['ReadOnly', 'Transient', 'Output', 14, 21]
-                # obj.setPropertyStatus(prop_res, 'ReadOnly')
                 obj.setPropertyStatus(prop_res, ['ReadOnly', 'Transient', 'Output', 14, 21])
                 obj.touch()  # does this recurse??
 
             # anyway - may be our result has changed
             perform_calculation (obj)
-            # ## perform calculation
-            # result = calc_list_eval(obj, deflist)
-            # # print (f"to update Property Field {prop_res} with {result} of type {type(result)} ")
-            # setattr(obj, prop_res, result)
-            # obj.touch()
-
 
     # remove stale result fields
-        # cycle over result definitions properties
     for prop in obj.PropertiesList:
+        # cycle over result definitions properties
         match = re.search(f'^{CONST_RES_prefix}_(.*)', prop)
         if match:
             varname = match.group(1)
@@ -207,25 +163,25 @@ def update_res_fields(obj):
 
 
 
-class sheetSaxHandler(xml.sax.handler.ContentHandler):
-
-    def startElement(self, name, attrs):
-        print(f"BEGIN: <{name}>, {attrs.keys()}")
-        if attrs.__contains__('address') and attrs.__contains__('content'):
-            attr = attrs.getValue('address')
-            val  = attrs.getValue('content')
-            print(f"\t{attr} -> {val}")
-            match = re.search(f"^{CONST_MYBang}(.*)", val)
-            if match:
-                evld = match.groups()[0]
-                print(f"\t\tTBD: eval({evld})")
-
-    def endElement(self, name):
-        print(f"END: </{name}>")
-
-    def characters(self, content):
-        if content.strip() != "":
-            print("CONTENT:", repr(content))
+# class sheetSaxHandler(xml.sax.handler.ContentHandler):
+#
+#     def startElement(self, name, attrs):
+#         print(f"BEGIN: <{name}>, {attrs.keys()}")
+#         if attrs.__contains__('address') and attrs.__contains__('content'):
+#             attr = attrs.getValue('address')
+#             val  = attrs.getValue('content')
+#             print(f"\t{attr} -> {val}")
+#             match = re.search(f"^{CONST_MYBang}(.*)", val)
+#             if match:
+#                 evld = match.groups()[0]
+#                 print(f"\t\tTBD: eval({evld})")
+#
+#     def endElement(self, name):
+#         print(f"END: </{name}>")
+#
+#     def characters(self, content):
+#         if content.strip() != "":
+#             print("CONTENT:", repr(content))
 
 # class sheetSaxRecompAllCells(xml.sax.handler.ContentHandler):
 #     def startElement(self, name, attrs):
@@ -234,6 +190,7 @@ class sheetSaxHandler(xml.sax.handler.ContentHandler):
 #             addr = attrs.getValue('address')
 #             print(f'doing obj.recomputeCells({addr})')
 #             obj.recomputeCells(addr)
+
 
 # https://forum.freecad.org/viewtopic.php?p=182016#p182016
 class pySheetViewProvider:
@@ -285,16 +242,11 @@ class pySheet():
 
         # obj.ViewObject.Proxy = 0  # Mandatory unless ViewProvider is coded
 
-        # obj.addProperty('App::PropertyLength', 'Length',
-        #                 'Dimensions', 'Box length').Length = 10.0
-
         obj.addProperty('App::PropertyStringList', CONST_DEF_prefix + '_dummy', CONST_DEF_prefix ,
             'template for custom python function definition')
 
         obj.addProperty('App::PropertyString', CONST_CFG_prefix + '_prefix', CONST_CFG_prefix ,
             'common module path from FreeCAD-Macro-Dir, in foo.bar.format ')
-
-        # setattr(obj, CONST_CFG_prefix + '_dirs', ['', ':Macro', ':Mod', ':FCStd'])
 
         obj.addProperty('App::PropertyStringList', CONST_CFG_prefix + '_modules', CONST_CFG_prefix ,
             'list of module paths from FreeCAD-Macro-Dir/foo/bar/prefix, in foo.bar.prefix format ')
@@ -305,8 +257,7 @@ class pySheet():
         obj.addProperty('App::PropertyBool', CONST_CFG_prefix + '_reimport', CONST_CFG_prefix ,
             'set to true to reimport modules after code change')
 
-        # spe = spEvalidate.sheetPyCEvalidator(obj,
-        #    'cpy_cfg_prefix', 'cpy_cfg_modules', 'cpy_cfg_functions', 'cpy_cfg_reimport')
+        # separate instantiation for correct save/restore
         self.spEvalidator = None
         self._spE_init(obj)
 
@@ -333,8 +284,7 @@ class pySheet():
         return None
     # #
     def loads(self, state):
-    #     ##### TBD  obj = häng on .... wie komm ich von da an mein Object??
-    #     spE_init (self, obj)
+        # can't spEvalidator right here since we have no access to object
         self.spEvalidator = None
         return None
 
@@ -343,7 +293,7 @@ class pySheet():
         """
         Called on document recompute
         """
-        # do we need this? or is the whole object rebuilt on load automagically?
+        # earliest hook after reload stored document where we have an obj
         if not self.spEvalidator:
             print ("in execute: spE_init(self, obj) ")
             self._spE_init(obj)
@@ -390,16 +340,8 @@ def create_pySheet(obj_name='pySheet', document=None):
     """
     if not document:
         document = App.ActiveDocument
-    # obj = document.addObject('Part::FeaturePython', obj_name)
-    # Spreadsheet::SheetPython
+
     obj = document.addObject('Spreadsheet::SheetPython', obj_name)
-
-
     pySheet(obj)
-    # obj.ViewObject.Proxy = 0  # Mandatory unless ViewProvider is coded
-
     return obj
 
-##
-# test generator
-# moved out
