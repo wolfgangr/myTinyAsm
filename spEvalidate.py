@@ -97,7 +97,12 @@ class sheetPyCEvalidator:
                 ## tbd: filter for selected functions
                 self.funclist = fl
 
-
+    # filter all functions in funclist() by user selection
+    def accessibleFunctions(self):
+        return  { fname: fref
+                    for (fname, fref) in self.funclist.items()
+                    if fname in self.sheet.cpy_cfg_functions
+                }
 ## ========================0~~~~~~~~~~~~~~~~~~~~~~~~~--------------------
 
 
