@@ -15,7 +15,7 @@ import Spreadsheet
 # Safely evaluate an expression node or a string containing a Python literal or container display.
 from ast import literal_eval
 
-# from dev.myTinyAsm.spEvalidate import * # as spEvalidate
+import dev.myTinyAsm.spEvalidate as spEvalidate
 # from dev.myTinyAsm.spEvalidate import evalidate, sPyMod_model
 # from dev.myTinyAsm.spEvalidate import sPyMod_model
 
@@ -120,8 +120,12 @@ def calc_list_eval(obj, p_list: list[str]):
     # https://stackoverflow.com/questions/21100203/passing-arguments-to-python-eval
 
     # rv = eval(funcnam)(*params)
-    myfunc = eval(funcnam)
-    rv = myfunc(*params)
+    # myfunc = eval(funcnam)
+    # rv = myfunc(*params)
+
+    # sPeval(self, funcnam, *params) :
+    rv = spEvalidate.sPeval(funcnam, *params)
+
 
     # use evalidate instead to validate against malicious code
     # see https://github.com/FreeCAD/FreeCAD/issues/14042#issuecomment-2143963786
