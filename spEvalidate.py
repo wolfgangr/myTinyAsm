@@ -30,9 +30,11 @@ class sheetPyCEvalidator:
     # rv = func_ptr(*params)
     ## TBD - de-evalidate
     def sPeval(self, funcnam, *params) :
-        f_evd = evalidate.Expr(funcnam, model = self.model)
-        f_ptr = f_evd.eval
-        rv = f_ptr(*params)
+
+        self.make_ready() # ensure that our machinery is up to date
+
+        func_ptr = self.accsFlist[funcnam]
+        rv = func_ptr(*params)
         return rv
 
     def _update_modList(self):
@@ -121,6 +123,14 @@ class sheetPyCEvalidator:
         self.accsFlist = self.accessibleFunctions()
         self.ready = True
 
+    def make_ready(self):
+        if self.ready:
+            return True
+        _update(self)
+        if self.ready:
+            return True
+        else:
+            raise RuntimeError("update failed")
 
 
 
