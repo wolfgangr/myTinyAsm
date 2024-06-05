@@ -64,14 +64,21 @@ class sheetPyCEvalidator:
 
         fl = {}
         for key, value in self.modlist.items():
-            # => import value as key
+
+            # resemble the behaviour of 'import value as key'
             mod = sys.modules.get(key)
+
             if mod:                     # already imported
                 importlib.reload(mod)
-            else:                       #  yet unknown
+
+            else:                       #  if still unknown
                 try:
-                    import value as key
-                    mod = sys.modules.get(key)
+                    # import value as key
+                    # https://stackoverflow.com/questions/10675054/how-to-import-a-module-in-python-with-importlib-import-module#10675081
+                    # mod = importlib.import_module('.'+key ,  __name__)
+                    # mod = sys.modules.get(key)
+                    mod = importlib.import_module(value)
+                    globals()[key] = mod
                 except:
                     print(f"failed to:  import {value} as {key} ")
 
@@ -86,7 +93,7 @@ class sheetPyCEvalidator:
 
                     if callable(fcval):
                         fl[fcname] = fcval
-            if fl:
+        if fl:
                 ## tbd: filter for selected functions
                 self.funclist = fl
 
