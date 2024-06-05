@@ -124,7 +124,7 @@ def calc_list_eval(obj, p_list: list[str]):
     # rv = myfunc(*params)
 
     # sPeval(self, funcnam, *params) :
-    rv = spEvalidate.sPeval(funcnam, *params)
+    rv = obj.Proxy.spEvalidator.sPeval(funcnam, *params)
 
 
     # use evalidate instead to validate against malicious code
@@ -304,6 +304,14 @@ class pySheet():
 
         obj.addProperty('App::PropertyBool', CONST_CFG_prefix + '_reimport', CONST_CFG_prefix ,
             'set to true to reimport modules after code change')
+
+        # spe = spEvalidate.sheetPyCEvalidator(obj,
+        #    'cpy_cfg_prefix', 'cpy_cfg_modules', 'cpy_cfg_functions', 'cpy_cfg_reimport')
+        self.spEvalidator = spEvalidate.sheetPyCEvalidator( obj,
+                CONST_CFG_prefix + '_prefix'    ,
+                CONST_CFG_prefix + '_modules'   ,
+                CONST_CFG_prefix + '_functions' ,
+                CONST_CFG_prefix + '_reimport'    )
 
     # https://forum.freecad.org/viewtopic.php?p=346763&sid=d7e3d832b5e934914fcdccc5bdc100d5#p346763
     # does this help against "not json serializable" ?

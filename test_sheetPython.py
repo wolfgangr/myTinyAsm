@@ -122,7 +122,8 @@ for i in range(6):
 setattr(psh, CONST_CFG_prefix + '_prefix',     'dev.myTinyAsm')
 setattr(psh, CONST_CFG_prefix + '_modules',   ['trianglesolver', 'sheetPyMods_base'])
 setattr(psh, CONST_CFG_prefix + '_functions', ['select_args', 'solve'])
-
+psh.Proxy.spEvalidator.ready = False
+psh.Proxy.spEvalidator.make_ready()
 ## setup done
 
 document.recompute()
