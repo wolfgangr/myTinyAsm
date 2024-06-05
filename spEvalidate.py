@@ -114,13 +114,14 @@ class sheetPyCEvalidator:
     def _get_reimport(self):
         return bool( getattr(self.sheet, self.reimport, False))
 
-
+    def update_accesibleFuncs(self):
+        self.accsFlist = self.accessibleFunctions()
 
     def _update(self):
         # if not self.ready:
         self._update_modList()
         self._update_funcList()
-        self.accsFlist = self.accessibleFunctions()
+        self.update_accesibleFuncs()
         self.ready = True
 
     def make_ready(self):
