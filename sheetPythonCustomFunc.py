@@ -65,11 +65,13 @@ def eval_param(obj, param: str):
     match = re.search(r"^\'(.*)\'$", ps )
     if match:
         # forward all with quote encapsulation
-        return ('"' + match.group(1) + '"')
+        # return ('"' + match.group(1) + '"')
+        return str( match.group(1) )
 
     match = re.search(r"^\"(.*)\"$", ps )
     if match:
-        return ('"' + match.group(1) + '"')
+        # return ('"' + match.group(1) + '"')
+        return str( match.group(1) )
 
     # '=...' try  FreeCAD Expression;  even matches ...
     #   <<strings>>, cell and object references,  numbers and arithmetic expressions
