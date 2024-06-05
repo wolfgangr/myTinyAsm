@@ -307,32 +307,46 @@ class pySheet():
 
         # spe = spEvalidate.sheetPyCEvalidator(obj,
         #    'cpy_cfg_prefix', 'cpy_cfg_modules', 'cpy_cfg_functions', 'cpy_cfg_reimport')
+        self.spEvalidator = None
+        _spE_init(self, obj)
+
+    def _spE_init(self, obj):
         self.spEvalidator = spEvalidate.sheetPyCEvalidator( obj,
                 CONST_CFG_prefix + '_prefix'    ,
                 CONST_CFG_prefix + '_modules'   ,
                 CONST_CFG_prefix + '_functions' ,
                 CONST_CFG_prefix + '_reimport'    )
 
+
     # https://forum.freecad.org/viewtopic.php?p=346763&sid=d7e3d832b5e934914fcdccc5bdc100d5#p346763
     # does this help against "not json serializable" ?
     # def __getstate__(self):
-    #     return None
-    #
+    #     # return None
+    #     return dumps(self)
+    # #
     # def __setstate__(self, state):
-    #     return None
-    #
-    # # maybe this is what we need in 0.21.2 instead?
-    # def dumps(self):
-    #     return None
-    #
-    # def loads(self, state):
-    #     return None
+    #     #     return None
+    #     return loads(self, state):
+    # #
+    # # # maybe this is what we need in 0.21.2 instead?
+    def dumps(self):
+        return None
+    # #
+    def loads(self, state):
+    #     ##### TBD  obj = häng on .... wie komm ich von da an mein Object??
+    #     spE_init (self, obj)
+        return None
 
 
     def execute(self, obj):
         """
         Called on document recompute
         """
+        # do we need this? or is the whole object rebuilt on load automagically?
+        if not self.spEvalidator:
+            print ("in execute: spE_init(self, obj) ")
+            _spE_init(self, obj)
+
         # print('what shall I do to execute?')
         ## sync res fields
         recompute_cells(obj)
