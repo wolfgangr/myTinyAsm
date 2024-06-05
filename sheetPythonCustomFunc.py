@@ -331,7 +331,28 @@ class pySheet():
             match = re.match(f"^{CONST_CFG_prefix}_(.*)" , prop)
             if match:
                 print ("changed:", prop)
-                print ("### TBD: ###: evaluate configuration")
+                m_sufx = match.group(1)
+
+                if (m_sufx == 'prefix') or (m_sufx == 'modules'):
+                    self.spEvalidator._update_modList()
+                    print ('updated modlist: ', self.spEvalidator.modlist)
+
+                elif (m_sufx == 'reimport'):
+                    if getattr(obj, prop): # i.e. both existing and True
+                        ##
+                        print('reimporting modules...')
+                        self.spEvalidator._update_funcList()
+                        print ('updated list of available functions: ', self.spEvalidator.funclist)
+                        setattr(obj, prop, False)
+                        self.spEvalidator.update_accesibleFuncs()
+                        print ('updated list of selected functions: ', self.spEvalidator.accsFlist)
+
+                elif (m_sufx == 'functions'):
+                    self.spEvalidator.update_accesibleFuncs()
+                    print ('updated list of selected functions: ', self.spEvalidator.accsFlist)
+
+                else:
+                    print (f"### TBD: ###: evaluate configuration for {m_sufx}")
 
 
 def create_pySheet(obj_name='pySheet', document=None):
