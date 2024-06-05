@@ -11,6 +11,9 @@ from dev.myTinyAsm.sheetPythonCustomFunc import *
 from dev.myTinyAsm.trianglesolver import solve
 from dev.myTinyAsm.sheetPyMods_base import *
 
+import importlib
+# importlib.reload(dev.myTinyAsm.sheetPythonCustomFunc)
+
 # add allowd functions
 # sPyMod_model.imported_functions['select_args']=select_args
 # sPyMod_model.imported_functions['solve']=solve

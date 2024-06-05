@@ -308,7 +308,7 @@ class pySheet():
         # spe = spEvalidate.sheetPyCEvalidator(obj,
         #    'cpy_cfg_prefix', 'cpy_cfg_modules', 'cpy_cfg_functions', 'cpy_cfg_reimport')
         self.spEvalidator = None
-        _spE_init(self, obj)
+        self._spE_init(obj)
 
     def _spE_init(self, obj):
         self.spEvalidator = spEvalidate.sheetPyCEvalidator( obj,
@@ -335,6 +335,7 @@ class pySheet():
     def loads(self, state):
     #     ##### TBD  obj = häng on .... wie komm ich von da an mein Object??
     #     spE_init (self, obj)
+        self.spEvalidator = None
         return None
 
 
@@ -345,7 +346,7 @@ class pySheet():
         # do we need this? or is the whole object rebuilt on load automagically?
         if not self.spEvalidator:
             print ("in execute: spE_init(self, obj) ")
-            _spE_init(self, obj)
+            self._spE_init(obj)
 
         # print('what shall I do to execute?')
         ## sync res fields
