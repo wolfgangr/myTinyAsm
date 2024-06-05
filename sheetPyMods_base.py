@@ -19,6 +19,9 @@ def real_global_placement(link: str, subobj:str):
     print (f"retrieving placment of {subobj} in {link}")
     doc = FreeCAD.ActiveDocument
     lnk = doc.getObject(link)
-    plc = lnk.getSubObject(subobj, retType=3)
+    if not lnk:
+        return None
+
+    plc = lnk.getSubObject(subobj.rstrip('.')+'.' , retType=3)
     print(plc)
     return plc
