@@ -33,9 +33,13 @@ class sheetPyCEvalidator:
 
         self.make_ready() # ensure that our machinery is up to date
 
-        func_ptr = self.accsFlist[funcnam]
-        rv = func_ptr(*params)
-        return rv
+        func_ptr = self.accsFlist.get(funcnam)
+        if func_ptr:
+            rv = func_ptr(*params)
+            return rv
+        else:
+            return None
+
 
     def _update_modList(self):
         # FreeCAD.getUserMacroDir(True)
