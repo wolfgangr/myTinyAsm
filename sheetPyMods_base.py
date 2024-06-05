@@ -25,3 +25,7 @@ def real_global_placement(link: str, subobj:str):
     plc = lnk.getSubObject(subobj.rstrip('.')+'.' , retType=3)
     print(plc)
     return plc
+
+def noop():
+    pass
+

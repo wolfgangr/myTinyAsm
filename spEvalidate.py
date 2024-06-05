@@ -99,7 +99,7 @@ class sheetPyCEvalidator:
         for key, value in self.modlist.items():
 
             # resemble the behaviour of 'import value as key'
-            mod = sys.modules.get(key)
+            mod = sys.modules.get(value)
 
             if mod:                     # already imported
                 importlib.reload(mod)
@@ -113,7 +113,7 @@ class sheetPyCEvalidator:
                     print(f"failed to:  import {value} as {key} ")
 
             if mod:
-                mod.__dict__.keys()
+                # mod.__dict__.keys()
                 # filter out '__dunders__' to get function candidates
                 for fcname, fcval in mod.__dict__.items():
                     if  re.match(r"^__[\w]+__$", fcname):
