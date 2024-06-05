@@ -319,6 +319,8 @@ class pySheet():
         # if prop == 'cells':
         #     xml.sax.parseString(obj.cells.Content, sheetSaxHandler())
         # CONST_DEF_prefix
+        spo = obj.Proxy # self of sheet python object is not in local namespace here
+
         if re.match(f"^{CONST_prefix}.*" , prop): # prefilter since we are called quite often
             match = re.match(f"^{CONST_DEF_prefix}_(.*)" , prop)
             if match:
@@ -334,22 +336,24 @@ class pySheet():
                 m_sufx = match.group(1)
 
                 if (m_sufx == 'prefix') or (m_sufx == 'modules'):
-                    self.spEvalidator._update_modList()
-                    print ('updated modlist: ', self.spEvalidator.modlist)
+                    spo.spEvalidator._update_modList()
+                    print ('updated modlist: ', spo.spEvalidator.modlist)
 
                 elif (m_sufx == 'reimport'):
                     if getattr(obj, prop): # i.e. both existing and True
                         ##
                         print('reimporting modules...')
-                        self.spEvalidator._update_funcList()
-                        print ('updated list of available functions: ', self.spEvalidator.funclist)
+                        spo.spEvalidator._update_funcList()
+                        print ('updated list of available functions: ', spo.spEvalidator.funclist)
                         setattr(obj, prop, False)
-                        self.spEvalidator.update_accesibleFuncs()
-                        print ('updated list of selected functions: ', self.spEvalidator.accsFlist)
+                        spo.spEvalidator.update_accesibleFuncs()
+                        print ('updated list of selected functions: ', spo.spEvalidator.accsFlist)
+
+                    obj.touch()
 
                 elif (m_sufx == 'functions'):
-                    self.spEvalidator.update_accesibleFuncs()
-                    print ('updated list of selected functions: ', self.spEvalidator.accsFlist)
+                    spo.spEvalidator.update_accesibleFuncs()
+                    print ('updated list of selected functions: ', spo.spEvalidator.accsFlist)
 
                 else:
                     print (f"### TBD: ###: evaluate configuration for {m_sufx}")
