@@ -21,7 +21,7 @@ class sheetPyCEvalidator:
 
         self.modlist  = {}
         self.funclist = {}
-
+        self.accsFlist = {}
 
 
 
@@ -83,10 +83,9 @@ class sheetPyCEvalidator:
                     print(f"failed to:  import {value} as {key} ")
 
             if mod:
-                 mod.__dict__.keys()
-                 # filter out 'dunders' to get function candidates
-                 # for fc in mod.__dict__.keys() if not re.match(r"^__[\w]+__$", k) :
-                 for fcname, fcval in mod.__dict__.items():
+                mod.__dict__.keys()
+                # filter out 'dunders' to get function candidates
+                for fcname, fcval in mod.__dict__.items():
                     # ignore __dunder__
                     if  re.match(r"^__[\w]+__$", fcname):
                         continue
@@ -94,7 +93,6 @@ class sheetPyCEvalidator:
                     if callable(fcval):
                         fl[fcname] = fcval
         if fl:
-                ## tbd: filter for selected functions
                 self.funclist = fl
 
     # filter all functions in funclist() by user selection
@@ -103,8 +101,6 @@ class sheetPyCEvalidator:
                     for (fname, fref) in self.funclist.items()
                     if fname in self.sheet.cpy_cfg_functions
                 }
-## ========================0~~~~~~~~~~~~~~~~~~~~~~~~~--------------------
-
 
     ##
     def touched(self):
@@ -118,13 +114,14 @@ class sheetPyCEvalidator:
 
 
 
-    def update(self):
-        if self.reimport:
-            self._update_modlist()
-            self._update_funcs()
-            self.reimport = False
+    def _update(self):
+        # if not self.ready:
+        self._update_modList()
+        self._update_funcList()
+        self.accsFlist = self.accessibleFunctions()
+        self.ready = True
 
-        # self._update_funcs()
+
 
 
 
