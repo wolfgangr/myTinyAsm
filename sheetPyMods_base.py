@@ -1,5 +1,10 @@
 import FreeCAD
 
+import numpy as np
+from scipy.optimize import fsolve
+# https://realpython.com/python-pretty-print/
+import pprint
+
 
 # basic testing dummy
 def select(mylist: list, pos: int):
@@ -13,6 +18,12 @@ def select(mylist: list, pos: int):
 def select_args(pos: int, *args):
     return select(args, pos)
 
+def noop():
+    pass
+
+def arg_pprint(*args):
+    # print(args)
+    pprint.pprint(args)
 
 # and my big topic: real global Placement of linked elements
 def real_global_placement(link: str, subobj:str):
@@ -26,6 +37,4 @@ def real_global_placement(link: str, subobj:str):
     print(plc)
     return plc
 
-def tuMirEchtNix():
-    pass
 

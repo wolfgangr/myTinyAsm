@@ -37,7 +37,7 @@ import importlib
 import re
 import sys
 
-ref_globals = globals()
+# ref_globals = globals()
 
 class sheetPyCEvalidator:
     """ implement evalidate and associated model for sheetPythonCustom """
@@ -96,7 +96,7 @@ class sheetPyCEvalidator:
     # import user defined modules and get available functions
     def _update_funcList(self):
 
-        global ref_globals
+        # global ref_globals
 
         fl = {}
         for key, value in self.modlist.items():
@@ -112,7 +112,7 @@ class sheetPyCEvalidator:
                     # import value as key
                     mod = importlib.import_module(value)
                     # globals()[key] = mod
-                    ref_globals[key] = mod
+                    # ref_globals[key] = mod
                 except:
                     print(f"failed to:  import {value} as {key} ")
 
