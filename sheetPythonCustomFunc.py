@@ -296,7 +296,8 @@ class pySheet():
         Called on document recompute
         """
         # earliest hook after reload stored document where we have an obj
-        if not self.spEvalidator:
+        # if not self.spEvalidator:
+        if not getattr(self, 'spEvalidator', None):
             print ("in execute: spE_init(self, obj) ")
             self._spE_init(obj)
 

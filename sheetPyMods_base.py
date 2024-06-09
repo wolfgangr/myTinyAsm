@@ -18,7 +18,7 @@ def select(mylist: list, pos: int):
 def select_args(pos: int, *args):
     return select(args, pos)
 
-def noop():
+def noop(*args):
     pass
 
 def arg_pprint(*args):
