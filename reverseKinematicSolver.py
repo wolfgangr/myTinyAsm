@@ -1,0 +1,1 @@
+/home/wrosner/cleo-wrosner/daten/hardtec/CNC/hexapod/kinematics/py-solve/reverseKinematicSolver.py
