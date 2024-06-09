@@ -145,6 +145,10 @@ class GPLinkInspector():
         # self.execute(obj)
         # pass
 
+    # https://wiki.freecad.org/FeaturePython_methods
+    def onDocumentRestored(self, obj):
+        obj.Proxy = self
+
     def execute(self, obj):
         """
         Called on document recompute

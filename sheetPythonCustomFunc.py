@@ -270,6 +270,9 @@ class pySheet():
                 CONST_CFG_prefix + '_functions' ,
                 CONST_CFG_prefix + '_reimport'    )
 
+    # https://wiki.freecad.org/FeaturePython_methods
+    def onDocumentRestored(self, obj):
+        obj.Proxy = self
 
     # https://forum.freecad.org/viewtopic.php?p=346763&sid=d7e3d832b5e934914fcdccc5bdc100d5#p346763
     # does this help against "not json serializable" ?

@@ -147,6 +147,11 @@ class GPattach():
         # self.execute(obj)
         # pass
 
+    # https://wiki.freecad.org/FeaturePython_methods
+    def onDocumentRestored(self, obj):
+        obj.Proxy = self
+
+
     def execute(self, obj):
 
         # retrieve list of subobjects and set enum for selection
