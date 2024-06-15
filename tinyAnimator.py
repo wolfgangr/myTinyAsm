@@ -64,3 +64,22 @@ class tinyAnimator():
             "output of the animator; cycles 0...1, bind your expressions hereto")
         obj.setPropertyStatus('output', ['ReadOnly', 'Transient', 'Output', 14, 21])
 
+
+    def onDocumentRestored(self, obj):
+        obj.Proxy = self
+
+
+    def execute(self, obj):
+        """
+        Called on document recompute
+        """
+        print('Recomputing {0:s} ({1:s})'.format(obj.Name, self.Type))
+
+        if not getattr(obj, "run_now", None):
+
+            idle = obj.idle_val
+            obj.output= idle
+
+            return None
+
+        print ("#### animating not yet implemented")
