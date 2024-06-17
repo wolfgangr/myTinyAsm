@@ -98,7 +98,7 @@ class tinyAnimator():
             "output of the animator; cycles 0...1, bind your expressions hereto")
         obj.setPropertyStatus('output', ['ReadOnly', 'Transient', 'Output', 14, 21])
 
-        self.animator = threading.Thread(target = self.runAnimation, args=(obj,))
+        # self.animator = threading.Thread(target = self.runAnimation, args=(obj,))
 
 
     def onDocumentRestored(self, obj):
@@ -156,12 +156,12 @@ class tinyAnimator():
                 #     self.animator.run()
                 # # stopping is implemented in thread by checking
                 if obj.run_now:
-                    self.timer = threading.Timer(obj.tick.Value, nextIteration, args=(obj))
+                    self.timer = threading.Timer(obj.tick.Value, nextIteration, args=(obj,))
                     self.timer.start()
                     print('started timer')
 
                 else:
-                    if hasattr(self, timer):
+                    if hasattr(self, 'timer'):
                         self.timer.cancel()
                         print('canceled timer')
                     else:
@@ -170,7 +170,7 @@ class tinyAnimator():
 
 
             case 'output':
-                self.timer = threading.Timer(obj.tick.Value, nextIteration, args=(obj))
+                self.timer = threading.Timer(obj.tick.Value, nextIteration, args=(obj,))
                 self.timer.start()
                 print('re-started timer for next iteration')
 
