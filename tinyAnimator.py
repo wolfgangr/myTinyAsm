@@ -68,6 +68,18 @@ class tinyAnimator():
     def onDocumentRestored(self, obj):
         obj.Proxy = self
 
+    def onChanged(self, obj, prop):
+        match prop:
+            case 'idle_val':
+                print ('idle_val now is:', obj.idle_val)
+
+            case _:
+                print (f'onChange for case {prop} not yet implemented')
+
+        print ('after onChanged match')
+
+
+
 
     def execute(self, obj):
         """
