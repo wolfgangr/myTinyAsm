@@ -42,18 +42,25 @@ def nextIteration(obj):
         if obj.run_cont:        # roll over
             obj.output = 0
             print("iteration rollover restart")
-            return
+            # return
 
         else:                   # reached end of single run
             obj.run_now=False
             obj.output = obj.idle_val
             print("animation ending after single run")
-            return
+            # return
 
     else:                       # normal increment
         obj.output = out        # this will trigger onChanged where we can reload
         print(f"iteration {out}")
-        return
+        # return
+
+    # print("recalculate and update ")
+    # obj.touch()
+    # obj.Document.recompute()
+    # FreeCADGui.updateGui()
+
+
 
 ##
 
@@ -163,6 +170,7 @@ class tinyAnimator():
                 else:
                     if hasattr(self, 'timer'):
                         self.timer.cancel()
+                        obj.output = obj.idle_val
                         print('canceled timer')
                     else:
                         print('noop stopped timer')
@@ -170,9 +178,14 @@ class tinyAnimator():
 
 
             case 'output':
+                # del self.timer
                 self.timer = threading.Timer(obj.tick.Value, nextIteration, args=(obj,))
                 self.timer.start()
                 print('re-started timer for next iteration')
+
+                obj.touch()
+                obj.Document.recompute()
+                FreeCADGui.updateGui()
 
             case _:
                 print (f'debug: Property {prop} changed - no special handling')
@@ -182,17 +195,17 @@ class tinyAnimator():
 
 
 
-    def execute(self, obj):
-        """
-        Called on document recompute
-        """
-        print('Recomputing {0:s} ({1:s})'.format(obj.Name, self.Type))
-
-        if not getattr(obj, "run_now", None):
-
-            idle = obj.idle_val
-            obj.output= idle
-
-            return None
-
-        print ("#### animating not yet implemented")
+    # def execute(self, obj):
+    #     """
+    #     Called on document recompute
+    #     """
+    #     print('Recomputing {0:s} ({1:s})'.format(obj.Name, self.Type))
+    #
+    #     if not getattr(obj, "run_now", None):
+    #
+    #         idle = obj.idle_val
+    #         obj.output= idle
+    #
+    #         return None
+    #
+    #     print ("#### animating not yet implemented")
