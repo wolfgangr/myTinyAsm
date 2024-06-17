@@ -77,10 +77,12 @@ class tinyAnimator():
     def runAnimation(self,obj):
         out = 0
         while True:
+            print (f"animation output {out}")
             obj.output = out
             # execute?
             obj.touch()
             obj.Document.recompute()
+            FreeCADGui.updateGui()
             time.sleep(obj.tick.Value)
             # cancel on manual stop
             if not obj.run_now:
@@ -93,6 +95,7 @@ class tinyAnimator():
                     out = 0
                 # finish animation after single run
                 else:
+                    obj.run_now=False
                     obj.output = obj.idle_val
                     break
 
