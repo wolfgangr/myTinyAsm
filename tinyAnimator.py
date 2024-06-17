@@ -6,6 +6,7 @@ from scipy.optimize import fsolve
 # https://realpython.com/python-pretty-print/
 # import pprint
 # import re
+import threading
 import time
 
 
@@ -42,10 +43,12 @@ class tinyAnimator():
         # frequency of updates
         obj.addProperty("App::PropertyTime", "tick", grp,
             'time paused between adjacent animation steps')
+        obj.tick = 1
 
         # number of steps
         obj.addProperty("App::PropertyInteger", 'steps', grp,
             'number of steps for a full animation cycle')
+        obj.steps = 30
 
         # idle value
         obj.addProperty("App::PropertyFloat", 'idle_val', grp,
@@ -64,14 +67,51 @@ class tinyAnimator():
             "output of the animator; cycles 0...1, bind your expressions hereto")
         obj.setPropertyStatus('output', ['ReadOnly', 'Transient', 'Output', 14, 21])
 
+        self.animator = threading.Thread(target = self.runAnimation, args=(obj,))
+
 
     def onDocumentRestored(self, obj):
         obj.Proxy = self
 
+    # can I call a method as thread function, to access instance properties?
+    def runAnimation(self,obj):
+        out = 0
+        while True:
+            obj.output = out
+            # execute?
+            obj.touch()
+            obj.Document.recompute()
+            time.sleep(obj.tick.Value)
+            # cancel on manual stop
+            if not obj.run_now:
+                break
+
+            out += 1/obj.steps
+            if out > 1:
+                # restart loop for continous running
+                if obj.run_cont:
+                    out = 0
+                # finish animation after single run
+                else:
+                    obj.output = obj.idle_val
+                    break
+
+
+
     def onChanged(self, obj, prop):
         match prop:
-            case 'idle_val':
-                print ('idle_val now is:', obj.idle_val)
+            # case 'idle_val':
+            #    print ('idle_val now is:', obj.idle_val)
+
+            case 'steps':
+                if not obj.steps:
+                    raise RuntimeWarning('steps = 0 will throw div-by-zero on animation')
+
+
+            case 'run_now':
+                if obj.run_now and not self.animator.is_alive():
+                    self.animator.run()
+                # stopping is implemented in thread by checking
 
             case _:
                 print (f'onChange for case {prop} not yet implemented')
