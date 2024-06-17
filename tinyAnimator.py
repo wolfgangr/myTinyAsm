@@ -8,7 +8,7 @@ from scipy.optimize import fsolve
 # import re
 import threading
 import time
-
+import asyncio
 
 
 
@@ -25,6 +25,37 @@ def create_tinyAnimator(obj_name = 'tinyAnimator'):
 
     # App.ActiveDocument.recompute()
     return obj
+
+##
+# called after timeout
+def nextIteration(obj):
+    print('nextIteration')
+
+    # cancel on manual stop?
+    if not obj.run_now:
+        return
+
+    out = obj.output
+    out += 1/obj.steps
+
+    if out > 1:
+        if obj.run_cont:        # roll over
+            obj.output = 0
+            print("iteration rollover restart")
+            return
+
+        else:                   # reached end of single run
+            obj.run_now=False
+            obj.output = obj.idle_val
+            print("animation ending after single run")
+            return
+
+    else:                       # normal increment
+        obj.output = out        # this will trigger onChanged where we can reload
+        print(f"iteration {out}")
+        return
+
+##
 
 class tinyAnimator():
     def __init__(self, obj):
@@ -73,31 +104,38 @@ class tinyAnimator():
     def onDocumentRestored(self, obj):
         obj.Proxy = self
 
-    # can I call a method as thread function, to access instance properties?
-    def runAnimation(self,obj):
-        out = 0
-        while True:
-            print (f"animation output {out}")
-            obj.output = out
-            # execute?
-            obj.touch()
-            obj.Document.recompute()
-            FreeCADGui.updateGui()
-            time.sleep(obj.tick.Value)
-            # cancel on manual stop
-            if not obj.run_now:
-                break
-
-            out += 1/obj.steps
-            if out > 1:
-                # restart loop for continous running
-                if obj.run_cont:
-                    out = 0
-                # finish animation after single run
-                else:
-                    obj.run_now=False
-                    obj.output = obj.idle_val
-                    break
+    # # can I call a method as thread function, to access instance properties?
+    # async def runAnimation(self,obj):
+    #     # await asyncio.sleep(0.1)
+    #     sleep(0.1)
+    #     out = 0
+    #     while True:
+    #         print (f"animation output {out}")
+    #         obj.output = out
+    #         # execute?
+    #         obj.touch()
+    #         obj.Document.recompute()
+    #         FreeCADGui.updateGui()
+    #         # time.sleep(obj.tick.Value)
+    #         await asyncio.sleep(obj.tick.Value)
+    #         # cancel on manual stop
+    #         if not obj.run_now:
+    #             print("animation ending after manual stop")
+    #             break
+    #
+    #         out += 1/obj.steps
+    #         if out > 1:
+    #             # restart loop for continous running
+    #             if obj.run_cont:
+    #                 out = 0
+    #             # finish animation after single run
+    #             else:
+    #                 obj.run_now=False
+    #                 obj.output = obj.idle_val
+    #                 print("animation ending after single run")
+    #                 break
+    #
+    #     print ("runAnimation ending")
 
 
 
@@ -112,14 +150,34 @@ class tinyAnimator():
 
 
             case 'run_now':
-                if obj.run_now and not self.animator.is_alive():
-                    self.animator.run()
-                # stopping is implemented in thread by checking
+                # if obj.run_now and not self.animator.is_alive():
+                #     # time.sleep(0.1)
+                #     # await asyncio.sleep(0.1)
+                #     self.animator.run()
+                # # stopping is implemented in thread by checking
+                if obj.run_now:
+                    self.timer = threading.Timer(obj.tick.Value, nextIteration, args=(obj))
+                    self.timer.start()
+                    print('started timer')
+
+                else:
+                    if hasattr(self, timer):
+                        self.timer.cancel()
+                        print('canceled timer')
+                    else:
+                        print('noop stopped timer')
+
+
+
+            case 'output':
+                self.timer = threading.Timer(obj.tick.Value, nextIteration, args=(obj))
+                self.timer.start()
+                print('re-started timer for next iteration')
 
             case _:
-                print (f'onChange for case {prop} not yet implemented')
+                print (f'debug: Property {prop} changed - no special handling')
 
-        print ('after onChanged match')
+        print ('debug: after onChanged match')
 
 
 
