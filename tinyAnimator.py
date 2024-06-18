@@ -160,11 +160,6 @@ class tinyAnimator():
                 # # stopping is implemented in thread by checking
                 if obj.run_now:
                     obj.output = 0
-                    # timer = threading.Timer(obj.tick.Value, nextIteration, args=(obj,))
-                    # timer.start()
-                    t = QtCore.QTimer()
-                    t.singleShot(100, self.runAnimation(obj))
-                    print('started timer')
 
                 # else:
                 #     if hasattr(self, 'timer'):
@@ -179,7 +174,8 @@ class tinyAnimator():
                     # del self.timer
                     # timer = threading.Timer(obj.tick.Value, nextIteration, args=(obj,))
                     # timer.start()
-                    # print('re-started timer for next iteration', timer)
+                    QtCore.QTimer.singleShot(obj.tick.Value * 1000, lambda:  nextIteration(obj))
+                    print('re-started timer for next iteration')
 
                     obj.touch()
                     obj.Document.recompute()
