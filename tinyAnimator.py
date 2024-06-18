@@ -1,14 +1,9 @@
 
 import FreeCAD
 
-# import numpy as np
-from scipy.optimize import fsolve
-# https://realpython.com/python-pretty-print/
-# import pprint
-# import re
 import threading
-import time
-import asyncio
+# import time
+# import asyncio
 
 
 
@@ -28,35 +23,38 @@ def create_tinyAnimator(obj_name = 'tinyAnimator'):
 
 ##
 # called after timeout
+
 def nextIteration(obj):
     print('nextIteration')
 
     # cancel on manual stop?
     if not obj.run_now:
-        return
-
-    out = obj.output
-    out += 1/obj.steps
-
-    if out > 1:
-        if obj.run_cont:        # roll over
-            obj.output = 0
-            print("iteration rollover restart")
-            # return
-
-        else:                   # reached end of single run
-            obj.run_now=False
-            obj.output = obj.idle_val
-            print("animation ending after single run")
-            # return
-
-    else:                       # normal increment
-        obj.output = out        # this will trigger onChanged where we can reload
-        print(f"iteration {out}")
+        obj.output = obj.idle_val
         # return
 
+    else:
+        out = obj.output
+        out += 1/obj.steps
+
+        if out > 1:
+            if obj.run_cont:        # roll over
+                obj.output = 0
+                print("iteration rollover restart")
+                # return
+
+            else:                   # reached end of single run
+                obj.run_now=False
+                obj.output = obj.idle_val
+                print("animation ending after single run")
+                # return
+
+        else:                       # normal increment
+            obj.output = out        # this will trigger onChanged where we can reload
+            print(f"iteration {out}")
+            # return
+
     # print("recalculate and update ")
-    # obj.touch()
+    obj.touch()
     # obj.Document.recompute()
     # FreeCADGui.updateGui()
 
@@ -148,8 +146,9 @@ class tinyAnimator():
 
     def onChanged(self, obj, prop):
         match prop:
-            # case 'idle_val':
-            #    print ('idle_val now is:', obj.idle_val)
+            case 'idle_val':
+                obj.output = obj.idle_val
+                obj.touch()
 
             case 'steps':
                 if not obj.steps:
@@ -157,20 +156,15 @@ class tinyAnimator():
 
 
             case 'run_now':
-                # if obj.run_now and not self.animator.is_alive():
-                #     # time.sleep(0.1)
-                #     # await asyncio.sleep(0.1)
-                #     self.animator.run()
                 # # stopping is implemented in thread by checking
                 if obj.run_now:
+                    obj.output = 0
                     timer = threading.Timer(obj.tick.Value, nextIteration, args=(obj,))
                     timer.start()
                     print('started timer')
 
                 else:
                     if hasattr(self, 'timer'):
-                        # self.timer.cancel()
-                        # obj.output = obj.idle_val
                         print('###TBD### canceled timer')
                     else:
                         print('noop stopped timer')
@@ -178,14 +172,15 @@ class tinyAnimator():
 
 
             case 'output':
-                # del self.timer
-                timer = threading.Timer(obj.tick.Value, nextIteration, args=(obj,))
-                timer.start()
-                print('re-started timer for next iteration', timer)
+                if obj.run_now:
+                    # del self.timer
+                    timer = threading.Timer(obj.tick.Value, nextIteration, args=(obj,))
+                    timer.start()
+                    print('re-started timer for next iteration', timer)
 
-                obj.touch()
-                obj.Document.recompute()
-                FreeCADGui.updateGui()
+                    obj.touch()
+                    obj.Document.recompute()
+                    FreeCADGui.updateGui()
 
             case _:
                 print (f'debug: Property {prop} changed - no special handling')
