@@ -1,1 +1,4 @@
 __pycache__/
+# symbolic links
+rkSolve.py
+reverseKinematicSolver.py
