@@ -174,9 +174,10 @@ class tinyAnimator():
             case 'output':
                 if obj.run_now:
                     # del self.timer
-                    timer = threading.Timer(obj.tick.Value, nextIteration, args=(obj,))
-                    timer.start()
-                    print('re-started timer for next iteration', timer)
+                    # timer = threading.Timer(obj.tick.Value, nextIteration, args=(obj,))
+                    # timer.start()
+                    QtCore.QTimer.singleShot(obj.tick.Value * 1000, lambda:  nextIteration(obj))
+                    print('re-started timer for next iteration')
 
                     obj.touch()
                     obj.Document.recompute()
