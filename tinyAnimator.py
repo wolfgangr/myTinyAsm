@@ -159,9 +159,9 @@ class tinyAnimator():
                 # # stopping is implemented in thread by checking
                 if obj.run_now:
                     obj.output = 0
-                    timer = threading.Timer(obj.tick.Value, nextIteration, args=(obj,))
-                    timer.start()
-                    print('started timer')
+                    # timer = threading.Timer(obj.tick.Value, nextIteration, args=(obj,))
+                    # timer.start()
+                    # print('started timer')
 
                 else:
                     if hasattr(self, 'timer'):
