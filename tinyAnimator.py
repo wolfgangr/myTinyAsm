@@ -1,7 +1,8 @@
 
 import FreeCAD
-
-import threading
+import FreeCADGui
+from PySide import QtCore
+# import threading
 # import time
 # import asyncio
 
@@ -11,21 +12,40 @@ import threading
 
 def create_tinyAnimator(obj_name = 'tinyAnimator'):
     """
-    bare FeaturePython with attached solver for reverse kinematic problem
+    bare FeaturePython with lean animator function
+
+    Properties:
+
+    Config:
+    - tick: time in s between steps, mileage may vary below ~ 50 ms
+    - steps: number of steps the animator is running from 0 to 1
+    - idle_val: output when animator is not running
+
+    Control:
+    - run_now: True to start, False to stop animation
+    - run_cont: False for single run, True for continuous repetition
+
+    output:
+    (read-only)
+    float value [ 0 .. 1 ] resembling current animation state
+    refer dependent objects to this Property to get animated
+
+    (copyleft LGPL) Wolfgang Rosner, June 2024
+    wolfgangr@github.com
+
     """
 
     obj = FreeCAD.ActiveDocument.addObject('App::FeaturePython', obj_name)
-    # rkSolve.rkSolver(obj)
     tinyAnimator(obj)
 
-    # App.ActiveDocument.recompute()
+    App.ActiveDocument.recompute()
     return obj
 
 ##
 # called after timeout
 
 def nextIteration(obj):
-    print('nextIteration')
+    # print('nextIteration')
 
     # cancel on manual stop?
     if not obj.run_now:
@@ -50,7 +70,7 @@ def nextIteration(obj):
 
         else:                       # normal increment
             obj.output = out        # this will trigger onChanged where we can reload
-            print(f"iteration {out}")
+            # print(f"iteration {out}")
             # return
 
     # print("recalculate and update ")
@@ -109,40 +129,6 @@ class tinyAnimator():
     def onDocumentRestored(self, obj):
         obj.Proxy = self
 
-    # # can I call a method as thread function, to access instance properties?
-    # async def runAnimation(self,obj):
-    #     # await asyncio.sleep(0.1)
-    #     sleep(0.1)
-    #     out = 0
-    #     while True:
-    #         print (f"animation output {out}")
-    #         obj.output = out
-    #         # execute?
-    #         obj.touch()
-    #         obj.Document.recompute()
-    #         FreeCADGui.updateGui()
-    #         # time.sleep(obj.tick.Value)
-    #         await asyncio.sleep(obj.tick.Value)
-    #         # cancel on manual stop
-    #         if not obj.run_now:
-    #             print("animation ending after manual stop")
-    #             break
-    #
-    #         out += 1/obj.steps
-    #         if out > 1:
-    #             # restart loop for continous running
-    #             if obj.run_cont:
-    #                 out = 0
-    #             # finish animation after single run
-    #             else:
-    #                 obj.run_now=False
-    #                 obj.output = obj.idle_val
-    #                 print("animation ending after single run")
-    #                 break
-    #
-    #     print ("runAnimation ending")
-
-
 
     def onChanged(self, obj, prop):
         match prop:
@@ -156,52 +142,31 @@ class tinyAnimator():
 
 
             case 'run_now':
-                # # stopping is implemented in thread by checking
                 if obj.run_now:
                     obj.output = 0
-                    # timer = threading.Timer(obj.tick.Value, nextIteration, args=(obj,))
-                    # timer.start()
-                    # print('started timer')
 
-                else:
-                    if hasattr(self, 'timer'):
-                        print('###TBD### canceled timer')
-                    else:
-                        print('noop stopped timer')
+                # else:
+                #     if hasattr(self, 'timer'):
+                #         print('###TBD### canceled timer')
+                #     else:
+                #         print('noop stopped timer')
 
 
 
             case 'output':
                 if obj.run_now:
-                    # del self.timer
-                    # timer = threading.Timer(obj.tick.Value, nextIteration, args=(obj,))
-                    # timer.start()
                     QtCore.QTimer.singleShot(obj.tick.Value * 1000, lambda:  nextIteration(obj))
-                    print('re-started timer for next iteration')
+                    # print('re-started timer for next iteration')
 
                     obj.touch()
                     obj.Document.recompute()
                     FreeCADGui.updateGui()
 
             case _:
-                print (f'debug: Property {prop} changed - no special handling')
+                # print (f'debug: Property {prop} changed - no special handling')
+                pass
 
-        print ('debug: after onChanged match')
-
-
+        # print ('debug: after onChanged match')
 
 
     # def execute(self, obj):
-    #     """
-    #     Called on document recompute
-    #     """
-    #     print('Recomputing {0:s} ({1:s})'.format(obj.Name, self.Type))
-    #
-    #     if not getattr(obj, "run_now", None):
-    #
-    #         idle = obj.idle_val
-    #         obj.output= idle
-    #
-    #         return None
-    #
-    #     print ("#### animating not yet implemented")
