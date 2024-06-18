@@ -105,8 +105,6 @@ class tinyAnimator():
             "output of the animator; cycles 0...1, bind your expressions hereto")
         obj.setPropertyStatus('output', ['ReadOnly', 'Transient', 'Output', 14, 21])
 
-        obj.addProperty("App::PropertyPythonObject", "timer", "intern", 'test')
-
         # self.animator = threading.Thread(target = self.runAnimation, args=(obj,))
 
 
@@ -165,15 +163,15 @@ class tinyAnimator():
                 #     self.animator.run()
                 # # stopping is implemented in thread by checking
                 if obj.run_now:
-                    obj.timer = threading.Timer(obj.tick.Value, nextIteration, args=(obj,))
-                    obj.timer.start()
+                    timer = threading.Timer(obj.tick.Value, nextIteration, args=(obj,))
+                    timer.start()
                     print('started timer')
 
                 else:
                     if hasattr(self, 'timer'):
-                        obj.timer.cancel()
-                        obj.output = obj.idle_val
-                        print('canceled timer')
+                        # self.timer.cancel()
+                        # obj.output = obj.idle_val
+                        print('###TBD### canceled timer')
                     else:
                         print('noop stopped timer')
 
@@ -181,9 +179,9 @@ class tinyAnimator():
 
             case 'output':
                 # del self.timer
-                obj.timer = threading.Timer(obj.tick.Value, nextIteration, args=(obj,))
-                obj.timer.start()
-                print('re-started timer for next iteration')
+                timer = threading.Timer(obj.tick.Value, nextIteration, args=(obj,))
+                timer.start()
+                print('re-started timer for next iteration', timer)
 
                 obj.touch()
                 obj.Document.recompute()
