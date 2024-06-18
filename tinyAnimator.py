@@ -2,7 +2,7 @@
 import FreeCAD
 
 import threading
-import time
+# import time
 # import asyncio
 
 
@@ -111,37 +111,36 @@ class tinyAnimator():
 
     # # can I call a method as thread function, to access instance properties?
     # async def runAnimation(self,obj):
-    def runAnimation(self,obj):
     #     # await asyncio.sleep(0.1)
     #     sleep(0.1)
-        out = 0
-        while True:
-            print (f"animation output {out}")
-            obj.output = out
-            # execute?
-            # obj.touch()
-            # obj.Document.recompute()
-            # FreeCADGui.updateGui()
-            time.sleep(obj.tick.Value)
-            # await asyncio.sleep(obj.tick.Value)
-            # cancel on manual stop
-            if not obj.run_now:
-                print("animation ending after manual stop")
-                break
-
-            out += 1/obj.steps
-            if out > 1:
-                # restart loop for continous running
-                if obj.run_cont:
-                    out = 0
-                # finish animation after single run
-                else:
-                    obj.run_now=False
-                    obj.output = obj.idle_val
-                    print("animation ending after single run")
-                    break
-
-        print ("runAnimation ending")
+    #     out = 0
+    #     while True:
+    #         print (f"animation output {out}")
+    #         obj.output = out
+    #         # execute?
+    #         obj.touch()
+    #         obj.Document.recompute()
+    #         FreeCADGui.updateGui()
+    #         # time.sleep(obj.tick.Value)
+    #         await asyncio.sleep(obj.tick.Value)
+    #         # cancel on manual stop
+    #         if not obj.run_now:
+    #             print("animation ending after manual stop")
+    #             break
+    #
+    #         out += 1/obj.steps
+    #         if out > 1:
+    #             # restart loop for continous running
+    #             if obj.run_cont:
+    #                 out = 0
+    #             # finish animation after single run
+    #             else:
+    #                 obj.run_now=False
+    #                 obj.output = obj.idle_val
+    #                 print("animation ending after single run")
+    #                 break
+    #
+    #     print ("runAnimation ending")
 
 
 
@@ -160,12 +159,15 @@ class tinyAnimator():
                 # # stopping is implemented in thread by checking
                 if obj.run_now:
                     obj.output = 0
+                    # timer = threading.Timer(obj.tick.Value, nextIteration, args=(obj,))
+                    # timer.start()
+                    # print('started timer')
 
-                # else:
-                #     if hasattr(self, 'timer'):
-                #         print('###TBD### canceled timer')
-                #     else:
-                #         print('noop stopped timer')
+                else:
+                    if hasattr(self, 'timer'):
+                        print('###TBD### canceled timer')
+                    else:
+                        print('noop stopped timer')
 
 
 
